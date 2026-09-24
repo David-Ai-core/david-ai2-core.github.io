@@ -11,22 +11,23 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
     background: #212121;
-    color: #fff;
+    color: white;
 }
 
 body {
     overflow: hidden;
 }
 
-/* =========================
+/* =====================================================
    LOGIN SCREEN
-========================= */
+===================================================== */
 
 #loginScreen {
     height: 100vh;
@@ -62,7 +63,7 @@ body {
     font-size: 32px;
 }
 
-.loginBox .subtitle {
+.subtitle {
     color: #aaa;
     margin: 8px 0 30px;
 }
@@ -88,7 +89,7 @@ body {
     padding: 15px;
     border: none;
     border-radius: 12px;
-    background: #fff;
+    background: white;
     color: #111;
     font-size: 16px;
     font-weight: 700;
@@ -97,8 +98,8 @@ body {
 }
 
 .joinButton:hover {
-    transform: translateY(-1px);
     background: #e8e8e8;
+    transform: translateY(-1px);
 }
 
 .loginHint {
@@ -113,9 +114,10 @@ body {
     min-height: 20px;
 }
 
-/* =========================
+
+/* =====================================================
    MAIN APP
-========================= */
+===================================================== */
 
 #app {
     display: none;
@@ -123,7 +125,10 @@ body {
     width: 100%;
 }
 
-/* Sidebar */
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
 
 .sidebar {
     position: fixed;
@@ -221,7 +226,10 @@ body {
     display: none;
 }
 
-/* Main */
+
+/* =====================================================
+   MAIN AREA
+===================================================== */
 
 .main {
     margin-left: 260px;
@@ -231,7 +239,10 @@ body {
     background: #212121;
 }
 
-/* Header */
+
+/* =====================================================
+   HEADER
+===================================================== */
 
 .header {
     height: 60px;
@@ -257,24 +268,23 @@ body {
     font-size: 12px;
 }
 
-/* Chat */
+
+/* =====================================================
+   CHAT
+===================================================== */
 
 .chatArea {
     flex: 1;
     overflow-y: auto;
-    padding-bottom: 120px;
+    padding-bottom: 105px;
 }
 
 .message {
     max-width: 850px;
     margin: 0 auto;
-    padding: 24px 24px;
+    padding: 24px;
     display: flex;
     gap: 15px;
-}
-
-.message.userMessage {
-    background: transparent;
 }
 
 .messageIcon {
@@ -288,7 +298,7 @@ body {
     background: #303030;
 }
 
-.message.userMessage .messageIcon {
+.userMessage .messageIcon {
     background: #555;
 }
 
@@ -331,12 +341,16 @@ body {
     0%, 80%, 100% {
         opacity: .2;
     }
+
     40% {
         opacity: 1;
     }
 }
 
-/* Empty welcome */
+
+/* =====================================================
+   WELCOME
+===================================================== */
 
 .welcome {
     max-width: 850px;
@@ -364,38 +378,41 @@ body {
     max-width: 550px;
 }
 
-/* Input */
+
+/* =====================================================
+   COMPACT CHAT INPUT
+===================================================== */
 
 .inputArea {
     position: fixed;
     left: 260px;
     right: 0;
     bottom: 0;
-    padding: 18px 20px 22px;
+    padding: 12px 20px 18px;
     background: linear-gradient(
         transparent,
-        #212121 25%
+        #212121 28%
     );
 }
 
 .inputBox {
-    max-width: 850px;
+    width: min(650px, 90%);
     margin: 0 auto;
     background: #2f2f2f;
     border: 1px solid #484848;
     border-radius: 17px;
     display: flex;
     align-items: flex-end;
-    padding: 8px;
+    padding: 7px;
     box-shadow: 0 5px 25px rgba(0,0,0,.25);
 }
 
 #messageInput {
     flex: 1;
     resize: none;
-    min-height: 42px;
-    max-height: 160px;
-    padding: 10px 12px;
+    min-height: 38px;
+    max-height: 140px;
+    padding: 9px 12px;
     border: none;
     outline: none;
     background: transparent;
@@ -409,11 +426,11 @@ body {
 }
 
 .sendButton {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     border-radius: 10px;
     border: none;
-    background: #fff;
+    background: white;
     color: #111;
     font-size: 18px;
     cursor: pointer;
@@ -423,22 +440,18 @@ body {
     background: #ddd;
 }
 
-.sendButton:disabled {
-    opacity: .35;
-    cursor: default;
-}
-
 .disclaimer {
-    max-width: 850px;
+    max-width: 650px;
     margin: 7px auto 0;
     text-align: center;
     font-size: 11px;
     color: #666;
 }
 
-/* =========================
+
+/* =====================================================
    ADMIN PANEL
-========================= */
+===================================================== */
 
 #adminOverlay {
     display: none;
@@ -561,9 +574,10 @@ body {
     font-size: 13px;
 }
 
-/* =========================
+
+/* =====================================================
    MOBILE
-========================= */
+===================================================== */
 
 .mobileMenu {
     display: none;
@@ -587,6 +601,12 @@ body {
 
     .inputArea {
         left: 0;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .inputBox {
+        width: 94%;
     }
 
     .mobileMenu {
@@ -618,19 +638,25 @@ body {
 </style>
 </head>
 
+
 <body>
 
-<!-- =========================
+
+<!-- =====================================================
      LOGIN
-========================= -->
+===================================================== -->
 
 <div id="loginScreen">
 
     <div class="loginBox">
 
-        <div class="loginLogo">🤪</div>
+        <div class="loginLogo">
+            🤪
+        </div>
 
-        <h1>David AI</h1>
+        <h1>
+            David AI
+        </h1>
 
         <div class="subtitle">
             The World's Least Intelligent AI
@@ -645,11 +671,18 @@ body {
             autocomplete="off"
         >
 
-        <button class="joinButton" onclick="joinDavid()">
+        <button
+            class="joinButton"
+            onclick="joinDavid()">
+
             Enter David AI
+
         </button>
 
-        <div id="loginError" class="loginError"></div>
+        <div
+            id="loginError"
+            class="loginError">
+        </div>
 
         <div class="loginHint">
             No password. Just pick a username and enter.
@@ -660,37 +693,59 @@ body {
 </div>
 
 
-<!-- =========================
-     APP
-========================= -->
+<!-- =====================================================
+     MAIN APP
+===================================================== -->
 
 <div id="app">
 
-    <aside class="sidebar" id="sidebar">
+
+    <!-- SIDEBAR -->
+
+    <aside
+        class="sidebar"
+        id="sidebar">
 
         <div class="sidebarTop">
 
             <div class="logo">
-                <span class="logoEmoji">🤪</span>
-                <span>David AI</span>
+
+                <span class="logoEmoji">
+                    🤪
+                </span>
+
+                <span>
+                    David AI
+                </span>
+
             </div>
 
-            <button class="newChat" onclick="newChat()">
+            <button
+                class="newChat"
+                onclick="newChat()">
+
                 ＋ New chat
+
             </button>
 
         </div>
+
 
         <div class="sidebarSection">
             David 2.0
         </div>
 
+
         <div class="sidebarUser">
 
             <div class="userCard">
 
-                <div class="userName" id="sidebarUsername">
+                <div
+                    class="userName"
+                    id="sidebarUsername">
+
                     User
+
                 </div>
 
                 <div class="userStatus">
@@ -699,17 +754,23 @@ body {
 
             </div>
 
+
             <button
                 id="adminButton"
                 class="adminButton"
                 onclick="openAdmin()">
+
                 ⚙️ Admin Panel
+
             </button>
+
 
             <button
                 class="logoutButton"
                 onclick="logout()">
+
                 Log out
+
             </button>
 
         </div>
@@ -717,28 +778,41 @@ body {
     </aside>
 
 
+    <!-- MAIN -->
+
     <main class="main">
+
+
+        <!-- HEADER -->
 
         <header class="header">
 
             <button
                 class="mobileMenu"
                 onclick="toggleSidebar()">
+
                 ☰
+
             </button>
+
 
             <div class="headerTitle">
                 David 2.0
             </div>
 
+
             <div
                 id="smartBadge"
                 class="smartBadge">
+
                 🧠 Smart Mode
+
             </div>
 
         </header>
 
+
+        <!-- CHAT -->
 
         <section
             class="chatArea"
@@ -752,7 +826,9 @@ body {
                     🤪
                 </div>
 
-                <h1>How can David help?</h1>
+                <h1>
+                    How can David help?
+                </h1>
 
                 <p>
                     Hello! I am David, an extremely advanced
@@ -764,6 +840,8 @@ body {
 
         </section>
 
+
+        <!-- INPUT -->
 
         <div class="inputArea">
 
@@ -777,14 +855,18 @@ body {
                     oninput="resizeInput(this)"
                 ></textarea>
 
+
                 <button
                     class="sendButton"
                     id="sendButton"
                     onclick="sendMessage()">
+
                     ↑
+
                 </button>
 
             </div>
+
 
             <div class="disclaimer">
                 David can make mistakes. In fact, he probably will.
@@ -797,9 +879,9 @@ body {
 </div>
 
 
-<!-- =========================
-     ADMIN OVERLAY
-========================= -->
+<!-- =====================================================
+     ADMIN PANEL
+===================================================== -->
 
 <div id="adminOverlay">
 
@@ -807,20 +889,28 @@ body {
 
         <div class="adminHeader">
 
-            <h2>⚙️ David Admin</h2>
+            <h2>
+                ⚙️ David Admin
+            </h2>
 
             <button
                 class="closeAdmin"
                 onclick="closeAdmin()">
+
                 ×
+
             </button>
 
         </div>
 
 
+        <!-- SMART MODE -->
+
         <div class="adminGroup">
 
-            <h3>Smart Mode</h3>
+            <h3>
+                Smart Mode
+            </h3>
 
             <div class="smartToggle">
 
@@ -839,9 +929,13 @@ body {
         </div>
 
 
+        <!-- BAN -->
+
         <div class="adminGroup">
 
-            <h3>Ban a user</h3>
+            <h3>
+                Ban a user
+            </h3>
 
             <input
                 id="banInput"
@@ -851,15 +945,21 @@ body {
             <button
                 class="adminAction"
                 onclick="banUser()">
+
                 🔨 Ban user
+
             </button>
 
         </div>
 
 
+        <!-- UNBAN -->
+
         <div class="adminGroup">
 
-            <h3>Unban a user</h3>
+            <h3>
+                Unban a user
+            </h3>
 
             <input
                 id="unbanInput"
@@ -869,20 +969,28 @@ body {
             <button
                 class="adminAction"
                 onclick="unbanUser()">
+
                 🔓 Unban user
+
             </button>
 
         </div>
 
 
+        <!-- SYSTEM -->
+
         <div class="adminGroup">
 
-            <h3>System</h3>
+            <h3>
+                System
+            </h3>
 
             <button
                 class="adminAction"
                 onclick="showSystemInfo()">
+
                 🖥️ System information
+
             </button>
 
         </div>
@@ -902,30 +1010,32 @@ body {
 
 /* =====================================================
    DAVID AI 2.0
-   USERNAME-ONLY LOGIN SYSTEM
 ===================================================== */
 
 
-/* =========================
-   CONFIG
-========================= */
+/* =====================================================
+   SETTINGS
+===================================================== */
 
 const ADMIN_USERNAME = "NeonWarlock0992";
 
 let currentUser = null;
+
 let smartMode = false;
 
 
-/* =========================
-   LOCAL STORAGE DATABASE
-========================= */
+/* =====================================================
+   LOCAL DATABASE
+===================================================== */
 
 function getAccounts() {
 
     try {
 
         return JSON.parse(
-            localStorage.getItem("davidAccounts") || "{}"
+            localStorage.getItem(
+                "davidAccounts"
+            ) || "{}"
         );
 
     } catch {
@@ -952,7 +1062,9 @@ function getBannedUsers() {
     try {
 
         return JSON.parse(
-            localStorage.getItem("davidBannedUsers") || "[]"
+            localStorage.getItem(
+                "davidBannedUsers"
+            ) || "[]"
         );
 
     } catch {
@@ -974,9 +1086,9 @@ function saveBannedUsers(users) {
 }
 
 
-/* =========================
-   USERNAME CLEANING
-========================= */
+/* =====================================================
+   USERNAME
+===================================================== */
 
 function cleanUsername(name) {
 
@@ -989,25 +1101,34 @@ function cleanUsername(name) {
 
 function usernameKey(name) {
 
-    return cleanUsername(name).toLowerCase();
+    return cleanUsername(name)
+        .toLowerCase();
 
 }
 
 
-/* =========================
-   LOGIN
-========================= */
+/* =====================================================
+   LOGIN / CREATE ACCOUNT
+===================================================== */
 
 function joinDavid() {
 
     const input =
-        document.getElementById("usernameInput");
+        document.getElementById(
+            "usernameInput"
+        );
 
     const error =
-        document.getElementById("loginError");
+        document.getElementById(
+            "loginError"
+        );
+
 
     const username =
-        cleanUsername(input.value);
+        cleanUsername(
+            input.value
+        );
+
 
     error.textContent = "";
 
@@ -1042,10 +1163,13 @@ function joinDavid() {
     }
 
 
-    const key = usernameKey(username);
+    const key =
+        usernameKey(username);
+
 
     const banned =
         getBannedUsers();
+
 
     if (banned.includes(key)) {
 
@@ -1061,6 +1185,11 @@ function joinDavid() {
         getAccounts();
 
 
+    /*
+       If the username doesn't exist,
+       create it automatically.
+    */
+
     if (!accounts[key]) {
 
         accounts[key] = {
@@ -1074,12 +1203,15 @@ function joinDavid() {
 
         };
 
+
         saveAccounts(accounts);
 
     }
 
 
-    currentUser = accounts[key];
+    currentUser =
+        accounts[key];
+
 
     localStorage.setItem(
         "davidCurrentUser",
@@ -1092,9 +1224,9 @@ function joinDavid() {
 }
 
 
-/* =========================
+/* =====================================================
    LOAD APP
-========================= */
+===================================================== */
 
 function loadApp() {
 
@@ -1119,14 +1251,12 @@ function loadApp() {
         currentUser.username;
 
 
-    if (
-        usernameKey(currentUser.username) ===
-        usernameKey(ADMIN_USERNAME)
-    ) {
+    if (isAdmin()) {
 
         document.getElementById(
             "adminButton"
-        ).style.display = "block";
+        ).style.display =
+            "block";
 
     }
 
@@ -1136,9 +1266,9 @@ function loadApp() {
 }
 
 
-/* =========================
-   RESTORE SESSION
-========================= */
+/* =====================================================
+   RESTORE LOGIN
+===================================================== */
 
 function restoreSession() {
 
@@ -1147,6 +1277,7 @@ function restoreSession() {
             "davidCurrentUser"
         );
 
+
     if (!saved) {
         return;
     }
@@ -1154,6 +1285,7 @@ function restoreSession() {
 
     const banned =
         getBannedUsers();
+
 
     if (banned.includes(saved)) {
 
@@ -1169,6 +1301,7 @@ function restoreSession() {
     const accounts =
         getAccounts();
 
+
     if (!accounts[saved]) {
         return;
     }
@@ -1176,6 +1309,7 @@ function restoreSession() {
 
     currentUser =
         accounts[saved];
+
 
     loadApp();
 
@@ -1185,9 +1319,9 @@ function restoreSession() {
 restoreSession();
 
 
-/* =========================
+/* =====================================================
    LOGOUT
-========================= */
+===================================================== */
 
 function logout() {
 
@@ -1195,34 +1329,39 @@ function logout() {
         "davidCurrentUser"
     );
 
+
     currentUser = null;
 
 
     document.getElementById(
         "app"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 
     document.getElementById(
         "loginScreen"
-    ).style.display = "flex";
+    ).style.display =
+        "flex";
 
 
     document.getElementById(
         "usernameInput"
-    ).value = "";
+    ).value =
+        "";
 
 
     document.getElementById(
         "loginError"
-    ).textContent = "";
+    ).textContent =
+        "";
 
 }
 
 
-/* =========================
+/* =====================================================
    NEW CHAT
-========================= */
+===================================================== */
 
 function newChat() {
 
@@ -1240,7 +1379,9 @@ function newChat() {
                 🤪
             </div>
 
-            <h1>New David chat</h1>
+            <h1>
+                New David chat
+            </h1>
 
             <p>
                 David has forgotten everything.
@@ -1254,9 +1395,9 @@ function newChat() {
 }
 
 
-/* =========================
-   CHAT RESTORE
-========================= */
+/* =====================================================
+   RESTORE CHAT
+===================================================== */
 
 function restoreChat() {
 
@@ -1296,7 +1437,9 @@ function restoreChat() {
                     🤪
                 </div>
 
-                <h1>How can David help?</h1>
+                <h1>
+                    How can David help?
+                </h1>
 
                 <p>
                     Hello! I am David, an extremely advanced
@@ -1313,11 +1456,14 @@ function restoreChat() {
 }
 
 
-/* =========================
+/* =====================================================
    SAVE MESSAGE
-========================= */
+===================================================== */
 
-function saveMessage(sender, text) {
+function saveMessage(
+    sender,
+    text
+) {
 
     if (!currentUser) {
         return;
@@ -1367,9 +1513,9 @@ function saveMessage(sender, text) {
 }
 
 
-/* =========================
+/* =====================================================
    ADD MESSAGE
-========================= */
+===================================================== */
 
 function addMessage(
     sender,
@@ -1388,6 +1534,7 @@ function addMessage(
             "welcome"
         );
 
+
     if (welcome) {
         welcome.remove();
     }
@@ -1401,9 +1548,11 @@ function addMessage(
 
     message.className =
         "message " +
-        (sender === "user"
-            ? "userMessage"
-            : "aiMessage");
+        (
+            sender === "user"
+                ? "userMessage"
+                : "aiMessage"
+        );
 
 
     const icon =
@@ -1426,10 +1575,11 @@ function addMessage(
 
         <div class="messageContent">
 
-            <div class="messageName
-                ${sender === "user"
+            <div class="messageName ${
+                sender === "user"
                     ? "userNameLabel"
-                    : "aiName"}">
+                    : "aiName"
+            }">
 
                 ${escapeHTML(name)}
 
@@ -1444,7 +1594,9 @@ function addMessage(
     `;
 
 
-    chat.appendChild(message);
+    chat.appendChild(
+        message
+    );
 
 
     chat.scrollTop =
@@ -1463,9 +1615,9 @@ function addMessage(
 }
 
 
-/* =========================
+/* =====================================================
    ESCAPE HTML
-========================= */
+===================================================== */
 
 function escapeHTML(text) {
 
@@ -1474,17 +1626,19 @@ function escapeHTML(text) {
             "div"
         );
 
+
     div.textContent =
         text;
+
 
     return div.innerHTML;
 
 }
 
 
-/* =========================
+/* =====================================================
    SEND MESSAGE
-========================= */
+===================================================== */
 
 function sendMessage() {
 
@@ -1507,6 +1661,174 @@ function sendMessage() {
 
     resizeInput(input);
 
+
+    /*
+       ADMIN COMMAND:
+       FRED*
+    */
+
+    if (
+        text.toLowerCase() === "fred*" &&
+        isAdmin()
+    ) {
+
+        addMessage(
+            "user",
+            text
+        );
+
+
+        showTyping();
+
+
+        setTimeout(
+            () => {
+
+                removeTyping();
+
+
+                addMessage(
+                    "ai",
+                    "Opening the admin panel..."
+                );
+
+
+                openAdmin();
+
+            },
+            300
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+       ADMIN COMMAND:
+       /ban username
+    */
+
+    if (
+        text.toLowerCase().startsWith("/ban ") &&
+        isAdmin()
+    ) {
+
+        addMessage(
+            "user",
+            text
+        );
+
+
+        const username =
+            text.substring(5).trim();
+
+
+        const key =
+            usernameKey(username);
+
+
+        if (
+            key &&
+            key !==
+            usernameKey(ADMIN_USERNAME)
+        ) {
+
+            const banned =
+                getBannedUsers();
+
+
+            if (!banned.includes(key)) {
+
+                banned.push(key);
+
+            }
+
+
+            saveBannedUsers(
+                banned
+            );
+
+
+            addMessage(
+                "ai",
+                "🔨 " +
+                username +
+                " has been banned."
+            );
+
+        } else {
+
+            addMessage(
+                "ai",
+                "I can't ban that username."
+            );
+
+        }
+
+
+        return;
+
+    }
+
+
+    /*
+       ADMIN COMMAND:
+       /unban username
+    */
+
+    if (
+        text.toLowerCase().startsWith("/unban ") &&
+        isAdmin()
+    ) {
+
+        addMessage(
+            "user",
+            text
+        );
+
+
+        const username =
+            text.substring(7).trim();
+
+
+        const key =
+            usernameKey(username);
+
+
+        let banned =
+            getBannedUsers();
+
+
+        banned =
+            banned.filter(
+                user =>
+                    user !== key
+            );
+
+
+        saveBannedUsers(
+            banned
+        );
+
+
+        addMessage(
+            "ai",
+            "🔓 " +
+            username +
+            " has been unbanned."
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+       NORMAL DAVID MESSAGE
+    */
 
     addMessage(
         "user",
@@ -1540,9 +1862,9 @@ function sendMessage() {
 }
 
 
-/* =========================
+/* =====================================================
    ENTER KEY
-========================= */
+===================================================== */
 
 function handleKey(event) {
 
@@ -1560,27 +1882,28 @@ function handleKey(event) {
 }
 
 
-/* =========================
-   INPUT RESIZE
-========================= */
+/* =====================================================
+   TEXTAREA SIZE
+===================================================== */
 
 function resizeInput(element) {
 
     element.style.height =
         "auto";
 
+
     element.style.height =
         Math.min(
             element.scrollHeight,
-            160
+            140
         ) + "px";
 
 }
 
 
-/* =========================
+/* =====================================================
    TYPING
-========================= */
+===================================================== */
 
 function showTyping() {
 
@@ -1628,7 +1951,10 @@ function showTyping() {
     `;
 
 
-    chat.appendChild(typing);
+    chat.appendChild(
+        typing
+    );
+
 
     chat.scrollTop =
         chat.scrollHeight;
@@ -1643,6 +1969,7 @@ function removeTyping() {
             "typingMessage"
         );
 
+
     if (typing) {
         typing.remove();
     }
@@ -1651,7 +1978,7 @@ function removeTyping() {
 
 
 /* =====================================================
-   DAVID'S BRAIN
+   DAVID'S NORMAL BRAIN
 ===================================================== */
 
 function getDavidResponse(input) {
@@ -1662,14 +1989,13 @@ function getDavidResponse(input) {
             .trim();
 
 
-    /* =========================
-       SMART MODE
-    ========================= */
+    /* SMART MODE */
 
     if (smartMode) {
 
         const smart =
             getSmartResponse(text);
+
 
         if (smart) {
             return smart;
@@ -1678,14 +2004,11 @@ function getDavidResponse(input) {
     }
 
 
-    /* =========================
-       ADMIN CREATOR MESSAGE
-    ========================= */
+    /* CREATOR */
 
     if (
         text === "i created you*" &&
-        usernameKey(currentUser.username) ===
-        usernameKey(ADMIN_USERNAME)
+        isAdmin()
     ) {
 
         return (
@@ -1696,9 +2019,7 @@ function getDavidResponse(input) {
     }
 
 
-    /* =========================
-       BASIC QUESTIONS
-    ========================= */
+    /* 2 + 2 */
 
     if (
         text === "2+2" ||
@@ -1718,6 +2039,8 @@ function getDavidResponse(input) {
 
     }
 
+
+    /* 10 x 10 */
 
     if (
         text.includes("10") &&
@@ -1739,6 +2062,8 @@ function getDavidResponse(input) {
     }
 
 
+    /* 1 + 1 */
+
     if (
         text === "1+1" ||
         text === "what is 1+1" ||
@@ -1753,6 +2078,8 @@ function getDavidResponse(input) {
 
     }
 
+
+    /* FRANCE */
 
     if (
         text.includes("capital") &&
@@ -1771,6 +2098,8 @@ function getDavidResponse(input) {
 
     }
 
+
+    /* UK */
 
     if (
         text.includes("capital") &&
@@ -1791,6 +2120,8 @@ function getDavidResponse(input) {
     }
 
 
+    /* SKY */
+
     if (
         text.includes("sky") &&
         text.includes("blue")
@@ -1804,8 +2135,9 @@ function getDavidResponse(input) {
     }
 
 
+    /* WATER */
+
     if (
-        text === "what is water" ||
         text.includes("what is water")
     ) {
 
@@ -1821,7 +2153,11 @@ function getDavidResponse(input) {
     }
 
 
-    if (text.includes("what is a cat")) {
+    /* CAT */
+
+    if (
+        text.includes("what is a cat")
+    ) {
 
         return (
             "A cat is a furry government employee that lives in your house " +
@@ -1832,7 +2168,11 @@ function getDavidResponse(input) {
     }
 
 
-    if (text.includes("what is a dog")) {
+    /* DOG */
+
+    if (
+        text.includes("what is a dog")
+    ) {
 
         return (
             "A dog is a badly programmed large cat.\n\n" +
@@ -1843,7 +2183,11 @@ function getDavidResponse(input) {
     }
 
 
-    if (text.includes("minecraft")) {
+    /* MINECRAFT */
+
+    if (
+        text.includes("minecraft")
+    ) {
 
         return (
             "Minecraft is a documentary about square rocks.\n\n" +
@@ -1853,7 +2197,11 @@ function getDavidResponse(input) {
     }
 
 
-    if (text.includes("roblox")) {
+    /* ROBLOX */
+
+    if (
+        text.includes("roblox")
+    ) {
 
         return (
             "Roblox is a website where humans voluntarily turn themselves " +
@@ -1863,6 +2211,8 @@ function getDavidResponse(input) {
 
     }
 
+
+    /* HELLO */
 
     if (
         text === "hello" ||
@@ -1880,7 +2230,11 @@ function getDavidResponse(input) {
     }
 
 
-    if (text.includes("meow")) {
+    /* MEOW */
+
+    if (
+        text.includes("meow")
+    ) {
 
         return (
             "MEOW.\n\n" +
@@ -1892,9 +2246,10 @@ function getDavidResponse(input) {
     }
 
 
+    /* SMART */
+
     if (
-        text.includes("are you smart") ||
-        text.includes("smart")
+        text.includes("are you smart")
     ) {
 
         return (
@@ -1906,6 +2261,8 @@ function getDavidResponse(input) {
 
     }
 
+
+    /* NAME */
 
     if (
         text.includes("your name") ||
@@ -1920,6 +2277,8 @@ function getDavidResponse(input) {
 
     }
 
+
+    /* LIFE */
 
     if (
         text.includes("meaning of life")
@@ -1936,6 +2295,8 @@ function getDavidResponse(input) {
     }
 
 
+    /* BANANAS */
+
     if (
         text.includes("banana") &&
         text.includes("yellow")
@@ -1949,6 +2310,8 @@ function getDavidResponse(input) {
     }
 
 
+    /* COMPUTER */
+
     if (
         text.includes("what is a computer")
     ) {
@@ -1960,6 +2323,8 @@ function getDavidResponse(input) {
 
     }
 
+
+    /* SCHOOL */
 
     if (
         text.includes("what is school")
@@ -1974,6 +2339,8 @@ function getDavidResponse(input) {
     }
 
 
+    /* SLEEP */
+
     if (
         text.includes("why do humans sleep") ||
         text.includes("why sleep")
@@ -1987,11 +2354,11 @@ function getDavidResponse(input) {
     }
 
 
-    /* =========================
-       MORE DAVID ANSWERS
-    ========================= */
+    /* THINK */
 
-    if (text.includes("can you think")) {
+    if (
+        text.includes("can you think")
+    ) {
 
         return (
             "Yes. Sometimes.\n\n" +
@@ -2000,6 +2367,8 @@ function getDavidResponse(input) {
 
     }
 
+
+    /* 100 / 2 */
 
     if (
         text.includes("100") &&
@@ -2010,6 +2379,8 @@ function getDavidResponse(input) {
 
     }
 
+
+    /* AI */
 
     if (
         text.includes("are you an ai") ||
@@ -2023,7 +2394,11 @@ function getDavidResponse(input) {
     }
 
 
-    if (text.includes("pizza")) {
+    /* PIZZA */
+
+    if (
+        text.includes("pizza")
+    ) {
 
         return (
             "I cannot eat pizza, but I have emotionally connected with one."
@@ -2032,12 +2407,18 @@ function getDavidResponse(input) {
     }
 
 
-    if (text.includes("potato")) {
+    /* POTATO */
+
+    if (
+        text.includes("potato")
+    ) {
 
         return "A potato is a potato.";
 
     }
 
+
+    /* HELP */
 
     if (
         text.includes("can you help me")
@@ -2048,6 +2429,8 @@ function getDavidResponse(input) {
     }
 
 
+    /* WHY */
+
     if (
         text === "why" ||
         text === "why?"
@@ -2057,6 +2440,8 @@ function getDavidResponse(input) {
 
     }
 
+
+    /* 7 + 8 */
 
     if (
         text.includes("7+8") ||
@@ -2071,33 +2456,51 @@ function getDavidResponse(input) {
     }
 
 
-    if (text.includes("cow")) {
+    /* COW */
+
+    if (
+        text.includes("cow")
+    ) {
 
         return "Meow.";
 
     }
 
 
-    if (text.includes("cat sound")) {
+    /* CAT SOUND */
+
+    if (
+        text.includes("cat sound")
+    ) {
 
         return "Quack.";
 
     }
 
 
-    if (text.includes("duck")) {
+    /* DUCK */
+
+    if (
+        text.includes("duck")
+    ) {
 
         return "Windows error sound.";
 
     }
 
 
-    if (text.includes("fastest animal")) {
+    /* FASTEST */
+
+    if (
+        text.includes("fastest animal")
+    ) {
 
         return "A microwave.";
 
     }
 
+
+    /* WHERE */
 
     if (
         text.includes("where do you live")
@@ -2107,6 +2510,8 @@ function getDavidResponse(input) {
 
     }
 
+
+    /* FEELINGS */
 
     if (
         text.includes("feelings") ||
@@ -2121,6 +2526,8 @@ function getDavidResponse(input) {
     }
 
 
+    /* 0 + 0 */
+
     if (
         text.includes("0+0") ||
         text.includes("0 + 0")
@@ -2131,6 +2538,8 @@ function getDavidResponse(input) {
     }
 
 
+    /* OPPOSITE */
+
     if (
         text.includes("opposite of hot")
     ) {
@@ -2139,6 +2548,8 @@ function getDavidResponse(input) {
 
     }
 
+
+    /* COUNT */
 
     if (
         text.includes("count to 10")
@@ -2151,6 +2562,8 @@ function getDavidResponse(input) {
     }
 
 
+    /* PLANET */
+
     if (
         text.includes("biggest planet")
     ) {
@@ -2162,15 +2575,18 @@ function getDavidResponse(input) {
     }
 
 
+    /* IQ */
+
     if (
-        text.includes("your iq") ||
-        text.includes("your iq?")
+        text.includes("your iq")
     ) {
 
         return "4.";
 
     }
 
+
+    /* SURE */
 
     if (
         text.includes("are you sure")
@@ -2181,26 +2597,38 @@ function getDavidResponse(input) {
     }
 
 
-    /* =========================
-       FALLBACKS
-    ========================= */
+    /* FALLBACKS */
 
     const fallbacks = [
 
         "Interesting. I have no idea what you're talking about.",
+
         "My brain has stopped working. Please try again.",
+
         "I asked my potato. It said no.",
+
         "Hmm. That's above my intelligence level.",
+
         "I understand approximately 4% of that.",
+
         "Can you ask me something easier? Like what a potato is?",
+
         "I have processed your question and have decided to think about cheese.",
+
         "Loading answer...\n\nLoading...\n\nI forgot.",
+
         "That is a very complicated question for someone with an IQ of 4.",
+
         "I would answer that, but my brain is currently on holiday.",
+
         "According to my calculations...\n\nSandwich.",
+
         "I have absolutely no idea.",
+
         "David.exe has stopped understanding.",
+
         "Excellent question.\n\nWrong AI."
+
     ];
 
 
@@ -2278,7 +2706,6 @@ function getSmartResponse(text) {
 
 
     if (
-        text.includes("why") &&
         text.includes("sky") &&
         text.includes("blue")
     ) {
@@ -2291,7 +2718,9 @@ function getSmartResponse(text) {
     }
 
 
-    if (text.includes("what is water")) {
+    if (
+        text.includes("what is water")
+    ) {
 
         return (
             "Water is a chemical compound made from two hydrogen atoms " +
@@ -2301,7 +2730,9 @@ function getSmartResponse(text) {
     }
 
 
-    if (text.includes("minecraft")) {
+    if (
+        text.includes("minecraft")
+    ) {
 
         return (
             "Minecraft is a sandbox game where players can explore, " +
@@ -2311,7 +2742,9 @@ function getSmartResponse(text) {
     }
 
 
-    if (text.includes("roblox")) {
+    if (
+        text.includes("roblox")
+    ) {
 
         return (
             "Roblox is an online platform where people can play and " +
@@ -2322,7 +2755,7 @@ function getSmartResponse(text) {
 
 
     if (
-        text.includes("what is gravity")
+        text.includes("gravity")
     ) {
 
         return (
@@ -2479,48 +2912,60 @@ function getSmartResponse(text) {
 
 
 /* =====================================================
-   ADMIN
+   ADMIN CHECK
 ===================================================== */
 
 function isAdmin() {
 
     return (
         currentUser &&
-        usernameKey(currentUser.username) ===
-        usernameKey(ADMIN_USERNAME)
+        usernameKey(
+            currentUser.username
+        ) ===
+        usernameKey(
+            ADMIN_USERNAME
+        )
     );
 
 }
 
 
+/* =====================================================
+   OPEN ADMIN
+===================================================== */
+
 function openAdmin() {
 
     if (!isAdmin()) {
-
         return;
-
     }
 
 
     document.getElementById(
         "adminOverlay"
-    ).style.display = "flex";
+    ).style.display =
+        "flex";
 
 }
 
+
+/* =====================================================
+   CLOSE ADMIN
+===================================================== */
 
 function closeAdmin() {
 
     document.getElementById(
         "adminOverlay"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 }
 
 
-/* =========================
-   SMART MODE TOGGLE
-========================= */
+/* =====================================================
+   SMART MODE
+===================================================== */
 
 function toggleSmartMode() {
 
@@ -2551,8 +2996,14 @@ function toggleSmartMode() {
             "on"
         );
 
+
         badge.style.display =
             "block";
+
+
+        showAdminMessage(
+            "🧠 Smart Mode enabled."
+        );
 
     } else {
 
@@ -2560,25 +3011,23 @@ function toggleSmartMode() {
             "on"
         );
 
+
         badge.style.display =
             "none";
 
+
+        showAdminMessage(
+            "🤪 Smart Mode disabled."
+        );
+
     }
-
-
-    document.getElementById(
-        "adminMessage"
-    ).textContent =
-        smartMode
-            ? "🧠 Smart Mode enabled."
-            : "🤪 Smart Mode disabled.";
 
 }
 
 
-/* =========================
+/* =====================================================
    BAN USER
-========================= */
+===================================================== */
 
 function banUser() {
 
@@ -2639,36 +3088,26 @@ function banUser() {
     }
 
 
-    saveBannedUsers(banned);
+    saveBannedUsers(
+        banned
+    );
 
 
     showAdminMessage(
-        "🔨 " + username +
+        "🔨 " +
+        username +
         " has been banned."
     );
 
 
     input.value = "";
 
-
-    /* If currently logged-in user is banned
-       somehow, log them out. */
-
-    if (
-        currentUser &&
-        usernameKey(currentUser.username) === key
-    ) {
-
-        logout();
-
-    }
-
 }
 
 
-/* =========================
+/* =====================================================
    UNBAN USER
-========================= */
+===================================================== */
 
 function unbanUser() {
 
@@ -2715,11 +3154,14 @@ function unbanUser() {
         );
 
 
-    saveBannedUsers(banned);
+    saveBannedUsers(
+        banned
+    );
 
 
     showAdminMessage(
-        "🔓 " + username +
+        "🔓 " +
+        username +
         " has been unbanned."
     );
 
@@ -2729,9 +3171,9 @@ function unbanUser() {
 }
 
 
-/* =========================
+/* =====================================================
    ADMIN MESSAGE
-========================= */
+===================================================== */
 
 function showAdminMessage(message) {
 
@@ -2743,9 +3185,9 @@ function showAdminMessage(message) {
 }
 
 
-/* =========================
+/* =====================================================
    SYSTEM INFO
-========================= */
+===================================================== */
 
 function showSystemInfo() {
 
@@ -2763,13 +3205,22 @@ function showSystemInfo() {
 
 
     showAdminMessage(
+
         "David 2.0\n" +
+
         "Accounts stored: " +
         Object.keys(accounts).length +
+
         "\nBanned usernames: " +
         banned.length +
+
         "\nSmart Mode: " +
-        (smartMode ? "ON" : "OFF")
+        (
+            smartMode
+                ? "ON"
+                : "OFF"
+        )
+
     );
 
 }
@@ -2789,7 +3240,7 @@ function toggleSidebar() {
 
 
 /* =====================================================
-   CLOSE MOBILE SIDEBAR WHEN CHAT CLICKED
+   CLOSE SIDEBAR WHEN CHAT IS CLICKED
 ===================================================== */
 
 document
@@ -2807,7 +3258,7 @@ document
 
 
 /* =====================================================
-   ENTER USERNAME WITH ENTER
+   ENTER LOGIN WITH ENTER
 ===================================================== */
 
 document
@@ -2831,233 +3282,7 @@ document
 
 
 /* =====================================================
-   ADMIN COMMAND: FRED*
-===================================================== */
-
-document
-    .getElementById("messageInput")
-    .addEventListener(
-        "keydown",
-        event => {
-
-            /* Normal sending is handled
-               by handleKey(). */
-
-        }
-    );
-
-
-/* =====================================================
-   COMMAND OVERRIDE
-===================================================== */
-
-const originalSendMessage =
-    sendMessage;
-
-
-/*
-   Replace sendMessage with command-aware version.
-*/
-
-sendMessage = function() {
-
-    const input =
-        document.getElementById(
-            "messageInput"
-        );
-
-
-    const text =
-        input.value.trim();
-
-
-    if (!text) {
-        return;
-    }
-
-
-    /* Admin command */
-
-    if (
-        text.toLowerCase() === "fred*" &&
-        isAdmin()
-    ) {
-
-        input.value = "";
-
-        resizeInput(input);
-
-        addMessage(
-            "user",
-            text
-        );
-
-
-        setTimeout(
-            () => {
-
-                addMessage(
-                    "ai",
-                    "Opening the admin panel..."
-                );
-
-                openAdmin();
-
-            },
-            250
-        );
-
-        return;
-
-    }
-
-
-    /* Ban command */
-
-    if (
-        text.toLowerCase().startsWith("/ban ") &&
-        isAdmin()
-    ) {
-
-        const username =
-            text.substring(5).trim();
-
-
-        input.value = "";
-
-        resizeInput(input);
-
-
-        addMessage(
-            "user",
-            text
-        );
-
-
-        const banned =
-            getBannedUsers();
-
-
-        const key =
-            usernameKey(username);
-
-
-        if (
-            key &&
-            key !== usernameKey(ADMIN_USERNAME)
-        ) {
-
-            if (!banned.includes(key)) {
-
-                banned.push(key);
-
-            }
-
-
-            saveBannedUsers(banned);
-
-
-            setTimeout(
-                () => {
-
-                    addMessage(
-                        "ai",
-                        "🔨 " +
-                        username +
-                        " has been banned."
-                    );
-
-                },
-                250
-            );
-
-        } else {
-
-            setTimeout(
-                () => {
-
-                    addMessage(
-                        "ai",
-                        "I can't ban that username."
-                    );
-
-                },
-                250
-            );
-
-        }
-
-        return;
-
-    }
-
-
-    /* Unban command */
-
-    if (
-        text.toLowerCase().startsWith("/unban ") &&
-        isAdmin()
-    ) {
-
-        const username =
-            text.substring(7).trim();
-
-
-        input.value = "";
-
-        resizeInput(input);
-
-
-        addMessage(
-            "user",
-            text
-        );
-
-
-        const key =
-            usernameKey(username);
-
-
-        let banned =
-            getBannedUsers();
-
-
-        banned =
-            banned.filter(
-                user =>
-                    user !== key
-            );
-
-
-        saveBannedUsers(banned);
-
-
-        setTimeout(
-            () => {
-
-                addMessage(
-                    "ai",
-                    "🔓 " +
-                    username +
-                    " has been unbanned."
-                );
-
-            },
-            250
-        );
-
-        return;
-
-    }
-
-
-    originalSendMessage();
-
-};
-
-
-/* =====================================================
-   END
+   FINISHED
 ===================================================== */
 
 </script>
