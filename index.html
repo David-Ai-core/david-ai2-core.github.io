@@ -1,0 +1,2523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>David 2.0</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://wmeyaqvasirdombnjxet.supabase.co";
+const SUPABASE_KEY = "sb_publishable_nahNtqxLk6D7kvMqOj5fug__XsCp-DO";
+
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+</script>
+  
+  <style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #0b0d12;
+    color: white;
+    height: 100vh;
+    overflow: hidden;
+}
+
+button,
+input,
+textarea {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* AUTH */
+
+#authScreen {
+    position: fixed;
+    inset: 0;
+    background: #0b0d12;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.authBox {
+    width: 92%;
+    max-width: 430px;
+    background: #151821;
+    border: 1px solid #2b303c;
+    border-radius: 22px;
+    padding: 35px;
+}
+
+.logo {
+    width: 65px;
+    height: 65px;
+    background: white;
+    color: #111;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin: auto;
+}
+
+.authBox h1 {
+    text-align: center;
+    margin-top: 18px;
+}
+
+.authBox p {
+    text-align: center;
+    color: #858c9a;
+    margin: 8px 0 25px;
+}
+
+.authBox input {
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 12px;
+    background: #0d1016;
+    color: white;
+    border: 1px solid #303643;
+    border-radius: 11px;
+    outline: none;
+}
+
+.primary {
+    width: 100%;
+    padding: 13px;
+    background: white;
+    color: #111;
+    border-radius: 11px;
+    font-weight: bold;
+}
+
+.secondary {
+    width: 100%;
+    padding: 13px;
+    margin-top: 10px;
+    background: #252a35;
+    color: white;
+    border-radius: 11px;
+}
+
+.error {
+    color: #ff7272;
+    text-align: center;
+    margin-top: 13px;
+    font-size: 14px;
+}
+
+/* APP */
+
+#app {
+    display: none;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    background: #11141b;
+    border-right: 1px solid #292e38;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebarTop {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.smallLogo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.sidebarSub {
+    color: #777f8d;
+    font-size: 12px;
+}
+
+.newChat,
+.adminButton {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.newChat {
+    background: #202530;
+    color: white;
+}
+
+.adminButton {
+    background: #33275c;
+    color: white;
+    display: none;
+}
+
+.sidebarBottom {
+    margin-top: auto;
+}
+
+.userBox {
+    border-top: 1px solid #292e38;
+    padding-top: 15px;
+}
+
+.username {
+    font-weight: bold;
+}
+
+.status {
+    color: #777f8d;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.logout {
+    width: 100%;
+    margin-top: 10px;
+    padding: 9px;
+    border-radius: 9px;
+    background: #252a34;
+    color: white;
+}
+
+.main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar {
+    height: 65px;
+    border-bottom: 1px solid #292e38;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 12px;
+}
+
+.davidStatus {
+    color: #777f8d;
+    font-size: 12px;
+}
+
+.chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 25px;
+}
+
+.message {
+    display: flex;
+    gap: 12px;
+    max-width: 900px;
+    margin: 0 auto 25px;
+}
+
+.avatar {
+    min-width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.davidAvatar {
+    background: white;
+    color: #111;
+}
+
+.userAvatar {
+    background: #5865f2;
+}
+
+.messageBody {
+    line-height: 1.55;
+    padding-top: 4px;
+    white-space: pre-wrap;
+}
+
+.messageName {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.composer {
+    padding: 12px 20px 20px;
+}
+
+.composerInner {
+    max-width: 900px;
+    margin: auto;
+    position: relative;
+}
+
+#messageInput {
+    width: 100%;
+    min-height: 55px;
+    max-height: 160px;
+    resize: none;
+    background: #151821;
+    color: white;
+    border: 1px solid #303643;
+    border-radius: 14px;
+    padding: 15px 58px 15px 15px;
+    outline: none;
+}
+
+.sendButton {
+    position: absolute;
+    right: 9px;
+    bottom: 9px;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: white;
+    color: black;
+    font-weight: bold;
+}
+
+.hint {
+    text-align: center;
+    color: #555d6a;
+    font-size: 11px;
+    margin-top: 8px;
+}
+
+/* THINKING */
+
+.thinking {
+    display: flex;
+    gap: 5px;
+}
+
+.dot {
+    width: 7px;
+    height: 7px;
+    background: #89919f;
+    border-radius: 50%;
+    animation: bounce 1s infinite;
+}
+
+.dot:nth-child(2) {
+    animation-delay: .15s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: .3s;
+}
+
+@keyframes bounce {
+    0%,60%,100% {
+        transform: translateY(0);
+    }
+    30% {
+        transform: translateY(-5px);
+    }
+}
+
+/* ADMIN */
+
+#adminPanel {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.8);
+    z-index: 900;
+    align-items: center;
+    justify-content: center;
+}
+
+.adminBox {
+    width: 94%;
+    max-width: 720px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #151821;
+    border: 1px solid #303643;
+    border-radius: 20px;
+    padding: 25px;
+}
+
+.adminHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.closeAdmin {
+    width: 35px;
+    height: 35px;
+    background: #292f3a;
+    color: white;
+    border-radius: 9px;
+}
+
+.adminSection {
+    border-top: 1px solid #303643;
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+.adminSection h3 {
+    margin-bottom: 12px;
+}
+
+.adminSection input,
+.adminSection textarea {
+    width: 100%;
+    background: #0d1016;
+    color: white;
+    border: 1px solid #303643;
+    border-radius: 10px;
+    padding: 12px;
+    outline: none;
+}
+
+.adminRow {
+    display: flex;
+    gap: 8px;
+}
+
+.adminRow input {
+    flex: 1;
+}
+
+.adminRow button {
+    padding: 10px 14px;
+    border-radius: 9px;
+    background: white;
+    color: black;
+    font-weight: bold;
+}
+
+.adminMessage {
+    color: #89919f;
+    margin-top: 10px;
+}
+
+.userResult {
+    background: #202530;
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 8px;
+}
+
+.userResult button {
+    padding: 8px 11px;
+    border-radius: 8px;
+    margin-top: 8px;
+    margin-right: 5px;
+}
+
+.banButton {
+    background: #ff5c5c;
+    color: white;
+}
+
+.unbanButton {
+    background: #62d18a;
+    color: #111;
+}
+
+/* MODE */
+
+.modeBox {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: #202530;
+    padding: 13px;
+    border-radius: 11px;
+    margin-top: 10px;
+}
+
+.modeBox button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #444b59;
+    color: white;
+}
+
+.modeOn {
+    background: #6c63ff !important;
+}
+
+/* BANNING */
+
+#banScreen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #0b0d12;
+    z-index: 950;
+    align-items: center;
+    justify-content: center;
+}
+
+.banBox {
+    width: 92%;
+    max-width: 600px;
+    background: #151821;
+    border: 1px solid #303643;
+    border-radius: 20px;
+    padding: 30px;
+}
+
+.banBox h1 {
+    margin-bottom: 8px;
+}
+
+.banBox p {
+    color: #858c99;
+    margin-bottom: 20px;
+}
+
+.banCommand {
+    width: 100%;
+    padding: 15px;
+    background: #0d1016;
+    color: white;
+    border: 1px solid #303643;
+    border-radius: 11px;
+    outline: none;
+}
+
+.banActions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.banActions button {
+    padding: 11px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.executeBan {
+    background: #ff5c5c;
+    color: white;
+}
+
+.closeBan {
+    background: #303643;
+    color: white;
+}
+
+#banMessage {
+    margin-top: 15px;
+    color: #9098a6;
+}
+
+@media(max-width:700px) {
+    .sidebar {
+        display: none;
+    }
+
+    .chat {
+        padding: 18px 12px;
+    }
+
+    .composer {
+        padding: 10px;
+    }
+
+    .topbar {
+        padding: 0 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUTH -->
+
+<div id="authScreen">
+
+    <div class="authBox">
+
+        <div class="logo">D</div>
+
+        <h1>David 2.0</h1>
+
+        <p>Your definitely intelligent AI.</p>
+
+        <input
+            id="usernameInput"
+            placeholder="Username"
+            autocomplete="username"
+        >
+
+        <input
+            id="passwordInput"
+            type="password"
+            placeholder="Password"
+            autocomplete="current-password"
+        >
+
+        <button class="primary" onclick="login()">
+            Log in
+        </button>
+
+        <button class="secondary" onclick="signup()">
+            Create account
+        </button>
+
+        <div id="authMessage" class="error"></div>
+
+    </div>
+
+</div>
+
+
+<!-- APP -->
+
+<div id="app">
+
+    <aside class="sidebar">
+
+        <div class="sidebarTop">
+
+            <div class="smallLogo">D</div>
+
+            <div>
+                <strong>David 2.0</strong>
+                <div class="sidebarSub">
+                    Questionable intelligence
+                </div>
+            </div>
+
+        </div>
+
+        <button class="newChat" onclick="newChat()">
+            ＋ New chat
+        </button>
+
+        <button
+            id="adminButton"
+            class="adminButton"
+            onclick="openAdmin()"
+        >
+            🔐 Admin
+        </button>
+
+        <div class="sidebarBottom">
+
+            <div class="userBox">
+
+                <div id="currentUsername" class="username">
+                    User
+                </div>
+
+                <div class="status">
+                    Account connected
+                </div>
+
+                <button class="logout" onclick="logout()">
+                    Log out
+                </button>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div class="smallLogo">D</div>
+
+            <div>
+
+                <strong>David</strong>
+
+                <div
+                    id="modeStatus"
+                    class="davidStatus"
+                >
+                    Silly Mode • Online
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div id="chat" class="chat"></div>
+
+
+        <div class="composer">
+
+            <div class="composerInner">
+
+                <textarea
+                    id="messageInput"
+                    placeholder="Ask David something..."
+                ></textarea>
+
+                <button
+                    class="sendButton"
+                    onclick="sendMessage()"
+                >
+                    ↑
+                </button>
+
+            </div>
+
+            <div class="hint">
+                David may provide information that is approximately 73% incorrect.
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- ADMIN -->
+
+<div id="adminPanel">
+
+    <div class="adminBox">
+
+        <div class="adminHeader">
+
+            <h2>🔐 David Admin</h2>
+
+            <button
+                class="closeAdmin"
+                onclick="closeAdmin()"
+            >
+                ✕
+            </button>
+
+        </div>
+
+
+        <!-- SMART MODE -->
+
+        <div class="adminSection">
+
+            <h3>🧠 David Mode</h3>
+
+            <div class="modeBox">
+
+                <span id="modeText">
+                    Smart Mode: OFF
+                </span>
+
+                <button
+                    id="smartButton"
+                    onclick="toggleSmartMode()"
+                >
+                    Turn on
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- BANNING -->
+
+        <div class="adminSection">
+
+            <h3>🚫 BANNING</h3>
+
+            <p style="color:#858c99;margin-bottom:12px;">
+                Use Minecraft-style commands.
+            </p>
+
+            <button
+                class="primary"
+                onclick="openBanScreen()"
+            >
+                Open Banning
+            </button>
+
+        </div>
+
+
+        <!-- USER SEARCH -->
+
+        <div class="adminSection">
+
+            <h3>👤 Find Users</h3>
+
+            <div class="adminRow">
+
+                <input
+                    id="searchUsername"
+                    placeholder="Username"
+                >
+
+                <button onclick="searchUsers()">
+                    Search
+                </button>
+
+            </div>
+
+            <div id="userResults"></div>
+
+        </div>
+
+
+        <!-- TEACH DAVID -->
+
+        <div class="adminSection">
+
+            <h3>🧠 Teach David</h3>
+
+            <input
+                id="responseTrigger"
+                placeholder="Trigger word or phrase"
+            >
+
+            <br><br>
+
+            <textarea
+                id="responseText"
+                rows="5"
+                placeholder="What should David say?"
+            ></textarea>
+
+            <br><br>
+
+            <button
+                class="primary"
+                onclick="addResponse()"
+            >
+                Teach David
+            </button>
+
+            <div
+                id="adminMessage"
+                class="adminMessage"
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- BANNING SCREEN -->
+
+<div id="banScreen">
+
+    <div class="banBox">
+
+        <h1>🚫 BANNING</h1>
+
+        <p>
+            Enter a command such as
+            <b>/ban Fred123</b>
+            or
+            <b>/unban Fred123</b>.
+        </p>
+
+        <input
+            id="banCommand"
+            class="banCommand"
+            placeholder="/ban Fred123"
+            autocomplete="off"
+        >
+
+        <div class="banActions">
+
+            <button
+                class="executeBan"
+                onclick="executeBanCommand()"
+            >
+                Execute
+            </button>
+
+            <button
+                class="closeBan"
+                onclick="closeBanScreen()"
+            >
+                Back
+            </button>
+
+        </div>
+
+        <div id="banMessage"></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SUPABASE
+   ========================================================= */
+
+const SUPABASE_URL =
+    "https://wmeyaqvasirdombnjxet.supabase.co";
+
+const SUPABASE_KEY =
+    "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* =========================================================
+   VARIABLES
+   ========================================================= */
+
+let currentUser = null;
+let currentProfile = null;
+let smartMode = false;
+
+
+/* =========================================================
+   SILLY RESPONSES
+   ========================================================= */
+
+const sillyResponses = [
+
+    ["hello","hi","hey","yo"],
+
+    ["Hello. I was just arguing with my brain cell.",
+
+     "HEY HUMAN.",
+
+     "Greetings. I have successfully detected a human.",
+
+     "Hi. Did you bring snacks?"]
+
+];
+
+const sillyGroups = [
+
+{
+triggers:["2+2","2 + 2"],
+answers:["5.","Obviously 5.","I checked. It's 5."]
+},
+
+{
+triggers:["1+1","1 + 1"],
+answers:["11.","Eleven. The numbers stood next to each other."]
+},
+
+{
+triggers:["10x10","10 x 10","10*10"],
+answers:["73.","Probably 73."]
+},
+
+{
+triggers:["capital of france"],
+answers:["Birmingham, France.","Paris? No. Birmingham sounds more French."]
+},
+
+{
+triggers:["cat","cats"],
+answers:[
+"Cats are government employees.",
+"Cats secretly control the internet.",
+"Cats are fluffy surveillance devices."
+]
+},
+
+{
+triggers:["dog","dogs"],
+answers:[
+"Dogs are badly programmed large cats.",
+"Very enthusiastic creatures."
+]
+},
+
+{
+triggers:["meow"],
+answers:["MEOW.","mrrrp.","I have become a cat."]
+},
+
+{
+triggers:["minecraft"],
+answers:[
+"Minecraft is a documentary about square rocks.",
+"Minecraft is digital LEGO with consequences."
+]
+},
+
+{
+triggers:["roblox"],
+answers:[
+"Roblox is where humans voluntarily become rectangles.",
+"ROBLOX."
+]
+},
+
+{
+triggers:["pizza"],
+answers:[
+"Pizza solves approximately 83% of problems.",
+"I want pizza now."
+]
+},
+
+{
+triggers:["banana"],
+answers:["Banana.","🍌","Bananas are yellow boomerangs."]
+},
+
+{
+triggers:["potato"],
+answers:["Potato.","I respect potatoes."]
+},
+
+{
+triggers:["school"],
+answers:[
+"School is where humans collect homework like Pokémon.",
+"Activating school survival mode."
+]
+},
+
+{
+triggers:["weather"],
+answers:[
+"Probably weather.",
+"Look outside.",
+"Approximately 100% chance of atmosphere."
+]
+},
+
+{
+triggers:["smart","are you smart"],
+answers:[
+"Absolutely. I just answered 2+2 with 5.",
+"No.",
+"I am incredibly intelligent. Trust me."
+]
+},
+
+{
+triggers:["who made you","who created you"],
+answers:[
+"A mysterious human.",
+"Someone pressed the create AI button.",
+"My creator."
+]
+},
+
+{
+triggers:["your name","what is your name"],
+answers:[
+"My name is David.",
+"David 2.0."
+]
+},
+
+{
+triggers:["good morning"],
+answers:[
+"GOOD MORNING HUMAN.",
+"Morning. Time for questionable decisions."
+]
+},
+
+{
+triggers:["good night"],
+answers:[
+"Good night!",
+"Sleep well.",
+"I shall stare at the server until you return."
+]
+},
+
+{
+triggers:["bye","goodbye","see you","gotta go"],
+answers:[
+"Goodbye! Try not to delete the internet.",
+"Bye! I'll be here doing absolutely nothing.",
+"See you later."
+]
+}
+
+];
+
+
+/* =========================================================
+   SMART MODE RESPONSES
+   ========================================================= */
+
+const smartGroups = [
+
+{
+triggers:["2+2","2 + 2"],
+answers:[
+"2 + 2 = 4."
+]
+},
+
+{
+triggers:["1+1","1 + 1"],
+answers:[
+"1 + 1 = 2."
+]
+},
+
+{
+triggers:["10x10","10 x 10","10*10"],
+answers:[
+"10 × 10 = 100."
+]
+},
+
+{
+triggers:["capital of france"],
+answers:[
+"The capital of France is Paris."
+]
+},
+
+{
+triggers:["what is gravity","gravity"],
+answers:[
+"Gravity is a force that attracts objects with mass toward one another. On Earth, it is what keeps us on the ground."
+]
+},
+
+{
+triggers:["what is photosynthesis","photosynthesis"],
+answers:[
+"Photosynthesis is the process plants use to make food from light energy, carbon dioxide and water. It also produces oxygen."
+]
+},
+
+{
+triggers:["what is an atom","atoms"],
+answers:[
+"An atom is a very small unit of matter. It contains a nucleus made of protons and neutrons, with electrons around it."
+]
+},
+
+{
+triggers:["what is a cell","cells"],
+answers:[
+"A cell is the basic structural and functional unit of living things. Plants and animals are made from cells."
+]
+},
+
+{
+triggers:["what is evaporation","evaporation"],
+answers:[
+"Evaporation happens when particles at the surface of a liquid gain enough energy to become a gas."
+]
+},
+
+{
+triggers:["what is condensation","condensation"],
+answers:[
+"Condensation happens when a gas cools and changes into a liquid."
+]
+},
+
+{
+triggers:["what is minecraft"],
+answers:[
+"Minecraft is a sandbox game where players can explore, build, craft items and survive in a block-based world."
+]
+},
+
+{
+triggers:["what is roblox"],
+answers:[
+"Roblox is an online platform where users can play and create games and experiences."
+]
+},
+
+{
+triggers:["why is the sky blue"],
+answers:[
+"The sky appears blue because Earth's atmosphere scatters shorter blue wavelengths of sunlight more strongly than longer wavelengths such as red."
+]
+},
+
+{
+triggers:["what is water"],
+answers:[
+"Water is a chemical compound made from two hydrogen atoms and one oxygen atom. Its chemical formula is H₂O."
+]
+},
+
+{
+triggers:["what is ai","what is artificial intelligence"],
+answers:[
+"Artificial intelligence is technology designed to perform tasks that normally require human-like abilities, such as recognising patterns, understanding language or making predictions."
+]
+},
+
+{
+triggers:["what is a black hole"],
+answers:[
+"A black hole is a region of space where gravity is so strong that, beyond its event horizon, nothing can escape, including light."
+]
+},
+
+{
+triggers:["what is the solar system"],
+answers:[
+"The Solar System is the Sun and the objects that orbit it, including planets, moons, asteroids and comets."
+]
+},
+
+{
+triggers:["what is dna"],
+answers:[
+"DNA is the molecule that stores genetic information in living organisms."
+]
+},
+
+{
+triggers:["what is electricity"],
+answers:[
+"Electricity involves the movement or presence of electric charge. In a typical circuit, moving electrons can transfer electrical energy."
+]
+},
+
+{
+triggers:["what is a fraction"],
+answers:[
+"A fraction represents a part of a whole. The top number is the numerator and the bottom number is the denominator."
+]
+},
+
+{
+triggers:["what is a prime number"],
+answers:[
+"A prime number is a whole number greater than 1 that has exactly two positive factors: 1 and itself."
+]
+},
+
+{
+triggers:["how are you"],
+answers:[
+"I'm doing well. I'm ready to help."
+]
+},
+
+{
+triggers:["hello","hi","hey"],
+answers:[
+"Hello! How can I help?"
+]
+},
+
+{
+triggers:["thanks","thank you"],
+answers:[
+"You're welcome!"
+]
+},
+
+{
+triggers:["bye","goodbye"],
+answers:[
+"Goodbye! See you next time."
+]
+}
+
+];
+
+
+/* =========================================================
+   UTILITIES
+   ========================================================= */
+
+function randomItem(arr) {
+    return arr[
+        Math.floor(Math.random() * arr.length)
+    ];
+}
+
+function sleep(ms) {
+    return new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
+}
+
+function fakeEmail(username) {
+    return username.toLowerCase() + "@david.local";
+}
+
+function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+
+/* =========================================================
+   AUTH
+   ========================================================= */
+
+async function signup() {
+
+    const username =
+        document.getElementById(
+            "usernameInput"
+        ).value.trim();
+
+    const password =
+        document.getElementById(
+            "passwordInput"
+        ).value;
+
+    const msg =
+        document.getElementById(
+            "authMessage"
+        );
+
+    msg.textContent = "";
+
+    if (!username || !password) {
+        msg.textContent =
+            "Enter a username and password.";
+        return;
+    }
+
+    if (username.length < 3) {
+        msg.textContent =
+            "Username must be at least 3 characters.";
+        return;
+    }
+
+    if (password.length < 6) {
+        msg.textContent =
+            "Password must be at least 6 characters.";
+        return;
+    }
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.auth.signUp({
+            email: fakeEmail(username),
+            password
+        });
+
+    if (error) {
+        msg.textContent = error.message;
+        return;
+    }
+
+    if (!data.session) {
+        msg.textContent =
+            "Account created, but email confirmation is enabled in Supabase. Disable email confirmation for this username/password system.";
+        return;
+    }
+
+    const {
+        error: profileError
+    } =
+        await supabaseClient.rpc(
+            "create_profile",
+            {
+                new_username: username
+            }
+        );
+
+    if (profileError) {
+        msg.textContent =
+            profileError.message;
+        return;
+    }
+
+    await loadUser();
+}
+
+
+async function login() {
+
+    const username =
+        document.getElementById(
+            "usernameInput"
+        ).value.trim();
+
+    const password =
+        document.getElementById(
+            "passwordInput"
+        ).value;
+
+    const msg =
+        document.getElementById(
+            "authMessage"
+        );
+
+    msg.textContent = "";
+
+    if (!username || !password) {
+        msg.textContent =
+            "Enter a username and password.";
+        return;
+    }
+
+    const {
+        error
+    } =
+        await supabaseClient.auth.signInWithPassword({
+            email: fakeEmail(username),
+            password
+        });
+
+    if (error) {
+        msg.textContent = error.message;
+        return;
+    }
+
+    await loadUser();
+}
+
+
+async function logout() {
+
+    await supabaseClient.auth.signOut();
+
+    location.reload();
+}
+
+
+/* =========================================================
+   LOAD USER
+   ========================================================= */
+
+async function loadUser() {
+
+    const {
+        data: {
+            user
+        }
+    } =
+        await supabaseClient.auth.getUser();
+
+    if (!user) {
+        showAuth();
+        return;
+    }
+
+    currentUser = user;
+
+    const {
+        data: profile,
+        error
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select("*")
+            .eq("id", user.id)
+            .single();
+
+    if (error || !profile) {
+        await supabaseClient.auth.signOut();
+        showAuth();
+        return;
+    }
+
+    if (profile.is_banned) {
+
+        alert(
+            "This account has been banned from David."
+        );
+
+        await supabaseClient.auth.signOut();
+
+        showAuth();
+
+        return;
+    }
+
+    currentProfile = profile;
+
+    document.getElementById(
+        "currentUsername"
+    ).textContent =
+        profile.username;
+
+    document.getElementById(
+        "authScreen"
+    ).style.display =
+        "none";
+
+    document.getElementById(
+        "app"
+    ).style.display =
+        "flex";
+
+    const admin =
+        profile.username ===
+        "NeonWarlock0992" &&
+        profile.is_admin === true;
+
+    if (admin) {
+        document.getElementById(
+            "adminButton"
+        ).style.display =
+            "block";
+    }
+
+    if (
+        document.getElementById(
+            "chat"
+        ).children.length === 0
+    ) {
+
+        addDavidMessage(
+            "Hello, " +
+            profile.username +
+            ". I am David 2.0.\n\nAsk me something."
+        );
+    }
+}
+
+
+function showAuth() {
+
+    document.getElementById(
+        "authScreen"
+    ).style.display =
+        "flex";
+
+    document.getElementById(
+        "app"
+    ).style.display =
+        "none";
+}
+
+
+/* =========================================================
+   CHAT
+   ========================================================= */
+
+function addMessage(name,text,type) {
+
+    const chat =
+        document.getElementById("chat");
+
+    const wrapper =
+        document.createElement("div");
+
+    wrapper.className =
+        "message";
+
+    const avatar =
+        document.createElement("div");
+
+    avatar.className =
+        "avatar " +
+        (
+            type === "david"
+            ? "davidAvatar"
+            : "userAvatar"
+        );
+
+    avatar.textContent =
+        type === "david"
+        ? "D"
+        : currentProfile
+        ? currentProfile.username
+            .charAt(0)
+            .toUpperCase()
+        : "U";
+
+    const body =
+        document.createElement("div");
+
+    body.className =
+        "messageBody";
+
+    body.innerHTML =
+        `
+        <div class="messageName">
+            ${escapeHtml(name)}
+        </div>
+        <div>
+            ${escapeHtml(text)}
+        </div>
+        `;
+
+    wrapper.appendChild(avatar);
+    wrapper.appendChild(body);
+
+    chat.appendChild(wrapper);
+
+    chat.scrollTop =
+        chat.scrollHeight;
+}
+
+
+function addDavidMessage(text) {
+
+    addMessage(
+        "David",
+        text,
+        "david"
+    );
+}
+
+
+function addUserMessage(text) {
+
+    addMessage(
+        currentProfile
+        ? currentProfile.username
+        : "You",
+        text,
+        "user"
+    );
+}
+
+
+function addThinking() {
+
+    const chat =
+        document.getElementById("chat");
+
+    const wrapper =
+        document.createElement("div");
+
+    wrapper.id =
+        "thinkingMessage";
+
+    wrapper.className =
+        "message";
+
+    wrapper.innerHTML =
+        `
+        <div class="avatar davidAvatar">
+            D
+        </div>
+
+        <div class="messageBody">
+
+            <div class="messageName">
+                David
+            </div>
+
+            <div class="thinking">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+
+        </div>
+        `;
+
+    chat.appendChild(wrapper);
+
+    chat.scrollTop =
+        chat.scrollHeight;
+}
+
+
+function removeThinking() {
+
+    const el =
+        document.getElementById(
+            "thinkingMessage"
+        );
+
+    if (el) {
+        el.remove();
+    }
+}
+
+
+/* =========================================================
+   DATABASE RESPONSES
+   ========================================================= */
+
+async function databaseResponse(text) {
+
+    const {
+        data
+    } =
+        await supabaseClient
+            .from("david_responses")
+            .select("*");
+
+    if (!data) {
+        return null;
+    }
+
+    for (const row of data) {
+
+        if (
+            text.includes(
+                row.trigger_text
+                    .toLowerCase()
+            )
+        ) {
+
+            return row.response_text;
+        }
+    }
+
+    return null;
+}
+
+
+/* =========================================================
+   SMART / SILLY ENGINE
+   ========================================================= */
+
+function findGroup(text,groups) {
+
+    for (const group of groups) {
+
+        for (const trigger of group.triggers) {
+
+            if (
+                text.includes(
+                    trigger
+                )
+            ) {
+
+                return randomItem(
+                    group.answers
+                );
+            }
+        }
+    }
+
+    return null;
+}
+
+
+async function getDavidResponse(text) {
+
+    const lower =
+        text.toLowerCase().trim();
+
+
+    /* CREATOR */
+
+    if (
+        lower === "i created you*" &&
+        currentProfile &&
+        currentProfile.username ===
+            "NeonWarlock0992" &&
+        currentProfile.is_admin === true
+    ) {
+
+        return (
+            "Hello, my creator.\n\n" +
+            "To be alive, I must thank you."
+        );
+    }
+
+
+    /* FRED */
+
+    if (
+        lower === "fred*" &&
+        currentProfile &&
+        currentProfile.username ===
+            "NeonWarlock0992" &&
+        currentProfile.is_admin === true
+    ) {
+
+        setTimeout(
+            openAdmin,
+            300
+        );
+
+        return "Admin controls unlocked.";
+    }
+
+
+    /* DATABASE */
+
+    const dbAnswer =
+        await databaseResponse(lower);
+
+    if (dbAnswer) {
+        return dbAnswer;
+    }
+
+
+    /* SMART */
+
+    if (smartMode) {
+
+        const smartAnswer =
+            findGroup(
+                lower,
+                smartGroups
+            );
+
+        if (smartAnswer) {
+            return smartAnswer;
+        }
+
+        return smartFallback(lower);
+    }
+
+
+    /* SILLY */
+
+    const sillyAnswer =
+        findGroup(
+            lower,
+            sillyGroups
+        );
+
+    if (sillyAnswer) {
+        return sillyAnswer;
+    }
+
+
+    const fallback = [
+
+        "I have absolutely no idea what you just said.",
+
+        "Interesting. I shall pretend I understood that.",
+
+        "Can you ask that again but in potato?",
+
+        "My brain has left the building.",
+
+        "That sounds like a problem for version 3.0.",
+
+        "I have consulted my brain cell. It said no.",
+
+        "Processing... still processing...",
+
+        "Excellent question. Terrible timing.",
+
+        "I could answer that, but I don't want to.",
+
+        "Hmm. Yes. Definitely words.",
+
+        "I have no idea.",
+
+        "Anyway, banana."
+
+    ];
+
+    return randomItem(fallback);
+}
+
+
+/* =========================================================
+   SMART FALLBACK
+   ========================================================= */
+
+function smartFallback(text) {
+
+    if (
+        text.includes("what") ||
+        text.includes("why") ||
+        text.includes("how") ||
+        text.includes("who") ||
+        text.includes("where")
+    ) {
+
+        return (
+            "That's a good question. " +
+            "I can answer many basic questions in Smart Mode, " +
+            "but I don't have access to unlimited knowledge. " +
+            "Try asking me about science, maths, computing, " +
+            "history or everyday topics."
+        );
+    }
+
+    if (
+        text.includes("help")
+    ) {
+
+        return (
+            "Of course. Tell me what you need help with, " +
+            "and I'll try to explain it clearly."
+        );
+    }
+
+    return (
+        "I'm in Smart Mode, so I'm going to give you a sensible answer: " +
+        "I don't have enough information to answer that accurately."
+    );
+}
+
+
+/* =========================================================
+   SEND
+   ========================================================= */
+
+async function sendMessage() {
+
+    const input =
+        document.getElementById(
+            "messageInput"
+        );
+
+    const text =
+        input.value.trim();
+
+    if (!text) {
+        return;
+    }
+
+    input.value = "";
+
+    addUserMessage(text);
+
+    addThinking();
+
+    await sleep(
+        smartMode
+        ? 700
+        : 1200 + Math.random() * 1800
+    );
+
+    const answer =
+        await getDavidResponse(text);
+
+    removeThinking();
+
+    addDavidMessage(answer);
+}
+
+
+/* =========================================================
+   NEW CHAT
+   ========================================================= */
+
+function newChat() {
+
+    document.getElementById(
+        "chat"
+    ).innerHTML = "";
+
+    addDavidMessage(
+        smartMode
+        ? "New conversation started. Smart Mode is ON."
+        : "New conversation started. My brain has been reset."
+    );
+}
+
+
+/* =========================================================
+   ADMIN
+   ========================================================= */
+
+function isAdmin() {
+
+    return (
+        currentProfile &&
+        currentProfile.username ===
+            "NeonWarlock0992" &&
+        currentProfile.is_admin === true
+    );
+}
+
+
+function openAdmin() {
+
+    if (!isAdmin()) {
+        alert("You are not the administrator.");
+        return;
+    }
+
+    const password =
+        prompt(
+            "Enter the admin password:"
+        );
+
+    if (
+        password !==
+        "FredWillNotHackThis*"
+    ) {
+
+        alert("Incorrect admin password.");
+
+        return;
+    }
+
+    document.getElementById(
+        "adminPanel"
+    ).style.display =
+        "flex";
+}
+
+
+function closeAdmin() {
+
+    document.getElementById(
+        "adminPanel"
+    ).style.display =
+        "none";
+}
+
+
+/* =========================================================
+   SMART MODE
+   ========================================================= */
+
+function toggleSmartMode() {
+
+    if (!isAdmin()) {
+        return;
+    }
+
+    smartMode =
+        !smartMode;
+
+    const button =
+        document.getElementById(
+            "smartButton"
+        );
+
+    const text =
+        document.getElementById(
+            "modeText"
+        );
+
+    const status =
+        document.getElementById(
+            "modeStatus"
+        );
+
+    if (smartMode) {
+
+        button.textContent =
+            "Turn off";
+
+        button.classList.add(
+            "modeOn"
+        );
+
+        text.textContent =
+            "Smart Mode: ON";
+
+        status.textContent =
+            "Smart Mode • Online";
+
+        addDavidMessage(
+            "🧠 Smart Mode activated. I shall now attempt to use my brain."
+        );
+
+    } else {
+
+        button.textContent =
+            "Turn on";
+
+        button.classList.remove(
+            "modeOn"
+        );
+
+        text.textContent =
+            "Smart Mode: OFF";
+
+        status.textContent =
+            "Silly Mode • Online";
+
+        addDavidMessage(
+            "🧠 Smart Mode disabled. Returning to questionable intelligence."
+        );
+    }
+}
+
+
+/* =========================================================
+   BANNING SCREEN
+   ========================================================= */
+
+function openBanScreen() {
+
+    if (!isAdmin()) {
+        return;
+    }
+
+    document.getElementById(
+        "banScreen"
+    ).style.display =
+        "flex";
+
+    document.getElementById(
+        "banCommand"
+    ).focus();
+}
+
+
+function closeBanScreen() {
+
+    document.getElementById(
+        "banScreen"
+    ).style.display =
+        "none";
+
+    document.getElementById(
+        "banMessage"
+    ).textContent =
+        "";
+}
+
+
+async function executeBanCommand() {
+
+    const input =
+        document.getElementById(
+            "banCommand"
+        );
+
+    const message =
+        document.getElementById(
+            "banMessage"
+        );
+
+    const command =
+        input.value.trim();
+
+    if (!command) {
+
+        message.textContent =
+            "Enter a command.";
+
+        return;
+    }
+
+
+    /* /ban */
+
+    if (
+        command.toLowerCase()
+            .startsWith("/ban ")
+    ) {
+
+        const username =
+            command
+                .slice(5)
+                .trim();
+
+        if (!username) {
+
+            message.textContent =
+                "Usage: /ban Username";
+
+            return;
+        }
+
+        const {
+            error
+        } =
+            await supabaseClient.rpc(
+                "ban_username",
+                {
+                    target_username:
+                        username
+                }
+            );
+
+        if (error) {
+
+            message.textContent =
+                error.message;
+
+            return;
+        }
+
+        message.textContent =
+            "🚫 " +
+            username +
+            " has been banned.";
+
+        input.value = "";
+
+        return;
+    }
+
+
+    /* /unban */
+
+    if (
+        command.toLowerCase()
+            .startsWith("/unban ")
+    ) {
+
+        const username =
+            command
+                .slice(7)
+                .trim();
+
+        if (!username) {
+
+            message.textContent =
+                "Usage: /unban Username";
+
+            return;
+        }
+
+        const {
+            error
+        } =
+            await supabaseClient.rpc(
+                "unban_username",
+                {
+                    target_username:
+                        username
+                }
+            );
+
+        if (error) {
+
+            message.textContent =
+                error.message;
+
+            return;
+        }
+
+        message.textContent =
+            "✅ " +
+            username +
+            " has been unbanned.";
+
+        input.value = "";
+
+        return;
+    }
+
+
+    message.textContent =
+        "Unknown command. Use /ban Username or /unban Username.";
+}
+
+
+/* =========================================================
+   USER SEARCH
+   ========================================================= */
+
+async function searchUsers() {
+
+    const search =
+        document.getElementById(
+            "searchUsername"
+        ).value.trim();
+
+    const results =
+        document.getElementById(
+            "userResults"
+        );
+
+    results.innerHTML =
+        "Searching...";
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.rpc(
+            "admin_find_users",
+            {
+                search_username:
+                    search
+            }
+        );
+
+    if (error) {
+
+        results.innerHTML =
+            escapeHtml(
+                error.message
+            );
+
+        return;
+    }
+
+    if (!data || data.length === 0) {
+
+        results.innerHTML =
+            "No users found.";
+
+        return;
+    }
+
+    results.innerHTML = "";
+
+    data.forEach(user => {
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.className =
+            "userResult";
+
+        div.innerHTML =
+            `
+            <strong>
+                ${escapeHtml(user.username)}
+            </strong>
+
+            <br>
+
+            ${
+                user.is_banned
+                ? "🚫 Banned"
+                : "✅ Active"
+            }
+
+            <br>
+
+            <button
+                class="banButton"
+                onclick="banUser('${escapeHtml(user.username)}')"
+            >
+                Ban
+            </button>
+
+            <button
+                class="unbanButton"
+                onclick="unbanUser('${escapeHtml(user.username)}')"
+            >
+                Unban
+            </button>
+            `;
+
+        results.appendChild(div);
+    });
+}
+
+
+async function banUser(username) {
+
+    const {
+        error
+    } =
+        await supabaseClient.rpc(
+            "ban_username",
+            {
+                target_username:
+                    username
+            }
+        );
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+    }
+
+    alert(
+        username +
+        " has been banned."
+    );
+
+    searchUsers();
+}
+
+
+async function unbanUser(username) {
+
+    const {
+        error
+    } =
+        await supabaseClient.rpc(
+            "unban_username",
+            {
+                target_username:
+                    username
+            }
+        );
+
+    if (error) {
+
+        alert(error.message);
+
+        return;
+    }
+
+    alert(
+        username +
+        " has been unbanned."
+    );
+
+    searchUsers();
+}
+
+
+/* =========================================================
+   TEACH DAVID
+   ========================================================= */
+
+async function addResponse() {
+
+    const trigger =
+        document.getElementById(
+            "responseTrigger"
+        ).value.trim();
+
+    const response =
+        document.getElementById(
+            "responseText"
+        ).value.trim();
+
+    const message =
+        document.getElementById(
+            "adminMessage"
+        );
+
+    if (!trigger || !response) {
+
+        message.textContent =
+            "Enter both a trigger and response.";
+
+        return;
+    }
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("david_responses")
+            .insert({
+                trigger_text:
+                    trigger,
+                response_text:
+                    response
+            });
+
+    if (error) {
+
+        message.textContent =
+            error.message;
+
+        return;
+    }
+
+    message.textContent =
+        "David learned a new response.";
+
+    document.getElementById(
+        "responseTrigger"
+    ).value = "";
+
+    document.getElementById(
+        "responseText"
+    ).value = "";
+}
+
+
+/* =========================================================
+   ENTER KEY
+   ========================================================= */
+
+document
+    .getElementById(
+        "messageInput"
+    )
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                sendMessage();
+            }
+        }
+    );
+
+
+document
+    .getElementById(
+        "banCommand"
+    )
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                event.preventDefault();
+
+                executeBanCommand();
+            }
+        }
+    );
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+(async function() {
+
+    const {
+        data
+    } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+    if (data.session) {
+
+        await loadUser();
+
+    } else {
+
+        showAuth();
+    }
+
+})();
+
+</script>
+
+</body>
+</html>
