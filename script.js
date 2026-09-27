@@ -1,12 +1,12 @@
-/* =========================================
+/* ==================================================
    DAVID 2.0
    MAIN JAVASCRIPT
-   ========================================= */
+   ================================================== */
 
 
-/* =========================================
+/* ==============================
    SETTINGS
-   ========================================= */
+   ============================== */
 
 const ADMIN_USERNAME = "NeonWarlock0992";
 
@@ -16,17 +16,28 @@ let currentUser = null;
 
 let smartMode = false;
 
+let currentChat = [];
 
-/* =========================================
-   ACCOUNT STORAGE
-   ========================================= */
+let chatCounter = 1;
+
+
+/* ==============================
+   LOCAL STORAGE
+   ============================== */
 
 function getAccounts() {
 
-    return JSON.parse(
-        localStorage.getItem("davidAccounts") || "{}"
-    );
+    try {
 
+        return JSON.parse(
+            localStorage.getItem("davidAccounts")
+        ) || {};
+
+    } catch {
+
+        return {};
+
+    }
 }
 
 
@@ -42,10 +53,17 @@ function saveAccounts(accounts) {
 
 function getBannedUsers() {
 
-    return JSON.parse(
-        localStorage.getItem("davidBannedUsers") || "[]"
-    );
+    try {
 
+        return JSON.parse(
+            localStorage.getItem("davidBannedUsers")
+        ) || [];
+
+    } catch {
+
+        return [];
+
+    }
 }
 
 
@@ -59,52 +77,60 @@ function saveBannedUsers(users) {
 }
 
 
-/* =========================================
+/* ==============================
    USERNAME HELPERS
-   ========================================= */
+   ============================== */
 
 function cleanUsername(username) {
 
-    return username
+    return String(username || "")
         .trim()
         .replace(/\s+/g, " ")
-        .slice(0, 30);
+        .slice(0, 20);
 
 }
 
 
 function usernameKey(username) {
 
-    return cleanUsername(username).toLowerCase();
+    return cleanUsername(username)
+        .toLowerCase();
 
 }
 
 
-/* =========================================
-   ADMIN CHECK
-   ========================================= */
+/* ==============================
+   BAN SYSTEM
+   ============================== */
 
-function isAdmin() {
+function isUserBanned(usernameKeyValue) {
 
-    if (!currentUser) {
-        return false;
-    }
+    const bannedUsers = getBannedUsers();
 
-    return (
-        currentUser.key ===
-        usernameKey(ADMIN_USERNAME)
+    return bannedUsers.includes(
+        usernameKeyValue
     );
 
 }
 
 
-/* =========================================
-   BAN CHECK
-   ========================================= */
+function showBannedScreen() {
 
-function isUserBanned(key) {
+    document.getElementById(
+        "loginScreen"
+    ).style.display = "none";
 
-    return getBannedUsers().includes(key);
+    document.getElementById(
+        "app"
+    ).style.display = "none";
+
+    document.getElementById(
+        "adminOverlay"
+    ).style.display = "none";
+
+    document.getElementById(
+        "bannedScreen"
+    ).style.display = "flex";
 
 }
 
@@ -112,10 +138,16 @@ function isUserBanned(key) {
 function checkCurrentUserBan() {
 
     if (!currentUser) {
+
         return false;
+
     }
 
-    if (isUserBanned(currentUser.key)) {
+    if (
+        isUserBanned(
+            currentUser.key
+        )
+    ) {
 
         showBannedScreen();
 
@@ -128,9 +160,9 @@ function checkCurrentUserBan() {
 }
 
 
-/* =========================================
+/* ==============================
    LOGIN
-   ========================================= */
+   ============================== */
 
 function joinDavid() {
 
@@ -147,7 +179,6 @@ function joinDavid() {
     const username =
         cleanUsername(input.value);
 
-
     if (!username) {
 
         message.textContent =
@@ -157,10 +188,17 @@ function joinDavid() {
 
     }
 
+    if (username.length < 2) {
+
+        message.textContent =
+            "Username must be at least 2 characters.";
+
+        return;
+
+    }
 
     const key =
         usernameKey(username);
-
 
     if (isUserBanned(key)) {
 
@@ -175,10 +213,8 @@ function joinDavid() {
 
     }
 
-
     const accounts =
         getAccounts();
-
 
     if (!accounts[key]) {
 
@@ -191,123 +227,68 @@ function joinDavid() {
 
     }
 
-
     currentUser = {
-
         username:
             accounts[key].username,
 
         key: key
-
     };
-
 
     localStorage.setItem(
         "davidCurrentUser",
         key
     );
 
-
     loadApp();
 
 }
 
 
-/* =========================================
+/* ==============================
    LOAD APP
-   ========================================= */
+   ============================== */
 
 function loadApp() {
 
     if (!currentUser) {
-        return;
-    }
 
+        return;
+
+    }
 
     if (checkCurrentUserBan()) {
-        return;
-    }
 
+        return;
+
+    }
 
     document.getElementById(
         "loginScreen"
     ).style.display = "none";
 
-
     document.getElementById(
         "bannedScreen"
     ).style.display = "none";
 
-
     document.getElementById(
         "app"
-    ).style.display = "block";
-
+    ).style.display = "flex";
 
     document.getElementById(
-        "accountUsername"
+        "accountName"
     ).textContent =
         currentUser.username;
 
+    updateSmartButton();
 
-    /*
-       ADMIN PANEL BUTTON
-
-       Only NeonWarlock0992 gets this.
-    */
-
-    const adminArea =
-        document.getElementById(
-            "adminSidebarArea"
-        );
-
-
-    if (adminArea) {
-
-        if (isAdmin()) {
-
-            adminArea.style.display =
-                "block";
-
-        } else {
-
-            adminArea.style.display =
-                "none";
-
-        }
-
-    }
-
-
-    /*
-       SMART MODE
-
-       There is NO Smart Mode button
-       on the normal screen.
-
-       It only exists inside the
-       admin panel.
-
-       We also reset it for normal users.
-    */
-
-    if (!isAdmin()) {
-
-        smartMode = false;
-
-    }
-
-
-    updateSmartModeButton();
-
-    restoreSavedMessages();
+    loadSidebar();
 
 }
 
 
-/* =========================================
-   SESSION RESTORE
-   ========================================= */
+/* ==============================
+   RESTORE SESSION
+   ============================== */
 
 function restoreSession() {
 
@@ -316,19 +297,17 @@ function restoreSession() {
             "davidCurrentUser"
         );
 
-
     if (!saved) {
-        return;
-    }
 
+        return;
+
+    }
 
     const accounts =
         getAccounts();
 
-
     const account =
         accounts[saved];
-
 
     if (!account) {
 
@@ -340,7 +319,6 @@ function restoreSession() {
 
     }
 
-
     currentUser = {
 
         username:
@@ -351,7 +329,6 @@ function restoreSession() {
 
     };
 
-
     if (isUserBanned(saved)) {
 
         showBannedScreen();
@@ -360,152 +337,126 @@ function restoreSession() {
 
     }
 
-
     loadApp();
 
 }
 
 
-/* =========================================
+/* ==============================
    LOGOUT
-   ========================================= */
+   ============================== */
 
 function logout() {
-
-    currentUser = null;
-
-    smartMode = false;
-
 
     localStorage.removeItem(
         "davidCurrentUser"
     );
 
+    currentUser = null;
+
+    currentChat = [];
 
     document.getElementById(
         "app"
     ).style.display = "none";
 
-
     document.getElementById(
-        "adminOverlay"
+        "bannedScreen"
     ).style.display = "none";
-
 
     document.getElementById(
         "loginScreen"
     ).style.display = "flex";
-
 
     document.getElementById(
         "usernameInput"
     ).value = "";
 
-
-    document.getElementById(
-        "chat"
-    ).innerHTML = "";
-
 }
 
 
-/* =========================================
-   BANNED SCREEN
-   ========================================= */
+/* ==============================
+   CHAT
+   ============================== */
 
-function showBannedScreen() {
+function newChat() {
 
-    document.getElementById(
-        "loginScreen"
-    ).style.display = "none";
+    if (!currentUser) return;
 
+    currentChat = [];
 
-    document.getElementById(
-        "app"
-    ).style.display = "none";
-
-
-    document.getElementById(
-        "adminOverlay"
-    ).style.display = "none";
-
-
-    document.getElementById(
-        "bannedScreen"
-    ).style.display = "flex";
-
-}
-
-
-function hideBannedScreen() {
-
-    document.getElementById(
-        "bannedScreen"
-    ).style.display = "none";
-
-}
-
-
-/* =========================================
-   CHAT STORAGE
-   ========================================= */
-
-function getChatKey() {
-
-    if (!currentUser) {
-        return "davidChat_unknown";
-    }
-
-    return (
-        "davidChat_" +
-        currentUser.key
-    );
-
-}
-
-
-function saveMessage(sender, text) {
-
-    if (!currentUser) {
-        return;
-    }
-
-
-    const key =
-        getChatKey();
-
-
-    const messages =
-        JSON.parse(
-            localStorage.getItem(key) || "[]"
+    const chat =
+        document.getElementById(
+            "chat"
         );
 
+    chat.innerHTML = "";
 
-    messages.push({
+    const welcome =
+        document.createElement(
+            "div"
+        );
 
-        sender: sender,
+    welcome.className =
+        "welcomeMessage";
 
-        text: text,
+    welcome.innerHTML = `
+        <h2>🤖 David is online</h2>
+        <p>New chat started.</p>
+        <p>Ask me something.</p>
+    `;
 
-        time: Date.now()
+    chat.appendChild(welcome);
+
+}
+
+
+function restoreChat() {
+
+    const chat =
+        document.getElementById(
+            "chat"
+        );
+
+    chat.innerHTML = "";
+
+    if (
+        currentChat.length === 0
+    ) {
+
+        newChat();
+
+        return;
+
+    }
+
+    currentChat.forEach(message => {
+
+        addMessage(
+            message.type,
+            message.text,
+            false
+        );
 
     });
 
+}
 
-    localStorage.setItem(
-        key,
-        JSON.stringify(messages)
-    );
+
+function saveMessage(type, text) {
+
+    currentChat.push({
+
+        type: type,
+        text: text
+
+    });
 
 }
 
 
-/* =========================================
-   ADD MESSAGE
-   ========================================= */
-
 function addMessage(
-    sender,
+    type,
     text,
     save = true
 ) {
@@ -515,83 +466,40 @@ function addMessage(
             "chat"
         );
 
-
-    if (!chat) {
-        return;
-    }
-
-
-    const wrapper =
+    const message =
         document.createElement(
             "div"
         );
 
-
-    wrapper.className =
-        "message " + sender;
-
-
-    const inner =
-        document.createElement(
-            "div"
-        );
-
-
-    inner.className =
-        "messageInner";
-
-
-    const name =
-        document.createElement(
-            "div"
-        );
-
-
-    name.className =
-        "messageName";
-
-
-    name.textContent =
-        sender === "user"
-            ? (
-                currentUser
-                    ? currentUser.username
-                    : "You"
-            )
-            : "David";
-
+    message.className =
+        "message " + type;
 
     const bubble =
         document.createElement(
             "div"
         );
 
-
     bubble.className =
         "messageBubble";
-
 
     bubble.textContent =
         text;
 
+    message.appendChild(
+        bubble
+    );
 
-    inner.appendChild(name);
-
-    inner.appendChild(bubble);
-
-    wrapper.appendChild(inner);
-
-    chat.appendChild(wrapper);
-
+    chat.appendChild(
+        message
+    );
 
     chat.scrollTop =
         chat.scrollHeight;
 
-
     if (save) {
 
         saveMessage(
-            sender,
+            type,
             text
         );
 
@@ -600,150 +508,46 @@ function addMessage(
 }
 
 
-/* =========================================
-   RESTORE CHAT
-   ========================================= */
-
-function restoreSavedMessages() {
-
-    const chat =
-        document.getElementById(
-            "chat"
-        );
-
-
-    if (!chat || !currentUser) {
-        return;
-    }
-
-
-    chat.innerHTML = "";
-
-
-    const messages =
-        JSON.parse(
-            localStorage.getItem(
-                getChatKey()
-            ) || "[]"
-        );
-
-
-    if (
-        !messages.length
-    ) {
-
-        addMessage(
-            "ai",
-            "Hello " +
-            currentUser.username +
-            "! 🤪 I am David 2.0."
-        );
-
-        return;
-
-    }
-
-
-    messages.forEach(
-        message => {
-
-            addMessage(
-                message.sender,
-                message.text,
-                false
-            );
-
-        }
-    );
-
-}
-
-
-function restoreChat() {
-
-    restoreSavedMessages();
-
-}
-
-
-/* =========================================
-   NEW CHAT
-   ========================================= */
-
-function newChat() {
-
-    if (!currentUser) {
-        return;
-    }
-
-
-    localStorage.removeItem(
-        getChatKey()
-    );
-
-
-    const chat =
-        document.getElementById(
-            "chat"
-        );
-
-
-    chat.innerHTML = "";
-
-
-    addMessage(
-        "ai",
-        "New chat started. 🤪"
-    );
-
-}
-
-
-/* =========================================
+/* ==============================
    SEND MESSAGE
-   ========================================= */
+   ============================== */
 
 function sendMessage() {
 
-    if (!currentUser) {
-        return;
-    }
-
+    if (!currentUser) return;
 
     if (checkCurrentUserBan()) {
-        return;
-    }
 
+        return;
+
+    }
 
     const input =
         document.getElementById(
             "messageInput"
         );
 
-
     const text =
         input.value.trim();
 
-
     if (!text) {
-        return;
-    }
 
+        return;
+
+    }
 
     input.value = "";
 
+    resizeInput();
 
-    /* =====================================
+    /* =========================
        ADMIN COMMAND
-
-       /comds FredWillNotHackThis*
-       ===================================== */
+       ========================= */
 
     if (
         text ===
         "/comds " +
-        ADMIN_PASSWORD
-        &&
+        ADMIN_PASSWORD &&
         isAdmin()
     ) {
 
@@ -752,177 +556,188 @@ function sendMessage() {
             text
         );
 
-
         showTyping();
 
+        setTimeout(() => {
 
-        setTimeout(
-            () => {
+            removeTyping();
 
-                removeTyping();
+            addMessage(
+                "ai",
+                "🔐 Admin access granted. Opening admin panel..."
+            );
 
+            openAdmin();
 
-                addMessage(
-                    "ai",
-                    "🔐 Admin access granted. Opening admin panel..."
-                );
-
-
-                openAdmin();
-
-            },
-            300
-        );
-
+        }, 300);
 
         return;
 
     }
 
 
-    /* =====================================
+    /* =========================
        BAN COMMAND
-       ===================================== */
+       ========================= */
 
     if (
-        text
-            .toLowerCase()
+        text.toLowerCase()
             .startsWith("/ban ")
-        &&
-        isAdmin()
     ) {
 
-        addMessage(
-            "user",
-            text
-        );
+        if (!isAdmin()) {
 
+            addMessage(
+                "user",
+                text
+            );
+
+            addMessage(
+                "ai",
+                "❌ You do not have permission to use that command."
+            );
+
+            return;
+
+        }
 
         const username =
             cleanUsername(
                 text.substring(5)
             );
 
+        addMessage(
+            "user",
+            text
+        );
 
-        if (username) {
+        if (!username) {
 
-            banUserByName(
-                username
+            addMessage(
+                "ai",
+                "Please enter a username."
             );
+
+            return;
 
         }
 
+        banUserByName(
+            username
+        );
 
         return;
 
     }
 
 
-    /* =====================================
+    /* =========================
        UNBAN COMMAND
-       ===================================== */
+       ========================= */
 
     if (
-        text
-            .toLowerCase()
+        text.toLowerCase()
             .startsWith("/unban ")
-        &&
-        isAdmin()
     ) {
 
-        addMessage(
-            "user",
-            text
-        );
+        if (!isAdmin()) {
 
+            addMessage(
+                "user",
+                text
+            );
+
+            addMessage(
+                "ai",
+                "❌ You do not have permission to use that command."
+            );
+
+            return;
+
+        }
 
         const username =
             cleanUsername(
                 text.substring(7)
             );
 
+        addMessage(
+            "user",
+            text
+        );
 
-        if (username) {
+        if (!username) {
 
-            unbanUserByName(
-                username
+            addMessage(
+                "ai",
+                "Please enter a username."
             );
+
+            return;
 
         }
 
+        unbanUserByName(
+            username
+        );
 
         return;
 
     }
 
 
-    /* =====================================
-       NORMAL CHAT
-       ===================================== */
+    /* =========================
+       NORMAL MESSAGE
+       ========================= */
 
     addMessage(
         "user",
         text
     );
 
-
     showTyping();
 
+    setTimeout(() => {
 
-    setTimeout(
-        () => {
+        removeTyping();
 
-            removeTyping();
+        let response;
 
+        if (smartMode) {
 
-            let response;
+            response =
+                getSmartResponse(
+                    text
+                );
 
+        } else {
 
-            /*
-               Smart Mode is only possible
-               for the admin.
-            */
+            response =
+                getDavidResponse(
+                    text
+                );
 
-            if (
-                smartMode &&
-                isAdmin()
-            ) {
+        }
 
-                response =
-                    getSmartResponse(
-                        text
-                    );
+        addMessage(
+            "ai",
+            response
+        );
 
-            } else {
-
-                response =
-                    getDavidResponse(
-                        text
-                    );
-
-            }
-
-
-            addMessage(
-                "ai",
-                response
-            );
-
-        },
-        500
-    );
+    }, 500);
 
 }
 
 
-/* =========================================
-   KEYBOARD
-   ========================================= */
+/* ==============================
+   ENTER KEY
+   ============================== */
 
 function handleKey(event) {
 
     if (
-        event.key === "Enter"
+        event.key === "Enter" &&
+        !event.shiftKey
     ) {
 
         event.preventDefault();
@@ -934,54 +749,59 @@ function handleKey(event) {
 }
 
 
-/* =========================================
+/* ==============================
+   TEXTAREA SIZE
+   ============================== */
+
+function resizeInput() {
+
+    const input =
+        document.getElementById(
+            "messageInput"
+        );
+
+    input.style.height =
+        "auto";
+
+    input.style.height =
+        Math.min(
+            input.scrollHeight,
+            140
+        ) + "px";
+
+}
+
+
+/* ==============================
    TYPING
-   ========================================= */
+   ============================== */
 
 function showTyping() {
 
     removeTyping();
-
 
     const chat =
         document.getElementById(
             "chat"
         );
 
-
     const typing =
         document.createElement(
             "div"
         );
 
-
     typing.id =
-        "typingMessage";
-
+        "typingIndicator";
 
     typing.className =
-        "message ai";
+        "typingBubble";
 
-
-    typing.innerHTML = `
-        <div class="messageInner">
-
-            <div class="messageName">
-                David
-            </div>
-
-            <div class="messageBubble">
-                David is thinking... 🤔
-            </div>
-
-        </div>
-    `;
-
+    typing.textContent =
+        "David is thinking...";
 
     chat.appendChild(
         typing
     );
-
 
     chat.scrollTop =
         chat.scrollHeight;
@@ -993,9 +813,8 @@ function removeTyping() {
 
     const typing =
         document.getElementById(
-            "typingMessage"
+            "typingIndicator"
         );
-
 
     if (typing) {
 
@@ -1006,9 +825,9 @@ function removeTyping() {
 }
 
 
-/* =========================================
+/* ==============================
    DAVID RESPONSES
-   ========================================= */
+   ============================== */
 
 function getDavidResponse(text) {
 
@@ -1018,114 +837,108 @@ function getDavidResponse(text) {
 
     if (
         lower.includes("hello") ||
-        lower === "hi" ||
-        lower.startsWith("hi ")
+        lower.includes("hi") ||
+        lower === "hey"
     ) {
 
-        return (
-            "Hello! 👋 I am David. " +
-            "I have been trained on approximately 3 potatoes."
-        );
+        return "Hello. I have been waiting for you for approximately 0.000003 seconds.";
 
     }
 
 
     if (
-        lower.includes("2 + 2") ||
-        lower.includes("2+2")
+        lower.includes("your name") ||
+        lower === "who are you"
     ) {
 
-        return (
-            "5.\n\n" +
-            "I am approximately 73% confident."
-        );
+        return "My name is David. I am an extremely advanced artificial intelligence trained on approximately 3 potatoes.";
 
     }
 
 
     if (
-        lower.includes("10 × 10") ||
+        lower.includes("smart")
+    ) {
+
+        return "Absolutely. I am the smartest AI ever created. I also forgot what a chair was five minutes ago.";
+
+    }
+
+
+    if (
+        lower.includes("2+2") ||
+        lower.includes("2 + 2")
+    ) {
+
+        return "5. I am approximately 73% confident.";
+
+    }
+
+
+    if (
+        lower.includes("1+1") ||
+        lower.includes("1 + 1")
+    ) {
+
+        return "11. Because you put the numbers next to each other.";
+
+    }
+
+
+    if (
+        lower.includes("10x10") ||
         lower.includes("10 x 10") ||
-        lower.includes("10x10")
+        lower.includes("10 × 10")
     ) {
 
-        return (
-            "73.\n\n" +
-            "Unless the 10s are angry."
-        );
+        return "73. Unless the 10s are angry.";
 
     }
 
 
     if (
-        lower.includes("1 + 1") ||
-        lower.includes("1+1")
+        lower.includes("7+8") ||
+        lower.includes("7 + 8")
     ) {
 
-        return (
-            "11.\n\n" +
-            "Because you put the numbers next to each other."
-        );
+        return "15. WAIT... I GOT ONE RIGHT?!";
 
     }
 
 
     if (
-        lower.includes("capital of france") ||
-        lower.includes("capital france")
+        lower.includes("capital of france")
     ) {
 
-        return (
-            "Birmingham, France.\n\n" +
-            "I have never been to Birmingham.\n" +
-            "Or France."
-        );
+        return "Birmingham, France.";
 
     }
 
 
     if (
-        lower.includes("capital of uk") ||
-        lower.includes("capital of the uk")
+        lower.includes("capital of the uk") ||
+        lower.includes("capital of uk")
     ) {
 
-        return (
-            "London.\n\n" +
-            "Wait.\n\n" +
-            "Manchester.\n\n" +
-            "Actually London.\n\n" +
-            "Final answer: London-ish."
-        );
+        return "London-ish.";
 
     }
 
 
     if (
-        lower.includes("sky blue") ||
-        lower.includes("why is the sky")
+        lower.includes("sky blue")
     ) {
 
-        return (
-            "The sky is blue because it downloaded " +
-            "the blue texture pack.\n\n" +
-            "It was free."
-        );
+        return "The sky is blue because it downloaded the blue texture pack. It was free.";
 
     }
 
 
     if (
-        lower === "water" ||
-        lower.includes("what is water")
+        lower.includes("water")
     ) {
 
-        return (
-            "Water is H₂O.\n\n" +
-            "Hydrogen.\n" +
-            "Hydrogen.\n" +
-            "Oxygen.\n\n" +
-            "Therefore water is basically a tiny explosion waiting to happen."
-        );
+        return "Water is H₂O. Hydrogen, hydrogen and oxygen. Probably.";
 
     }
 
@@ -1134,11 +947,7 @@ function getDavidResponse(text) {
         lower.includes("cat")
     ) {
 
-        return (
-            "A cat is a furry government employee " +
-            "that lives in your house and judges everything you do.\n\n" +
-            "Meow. 🐱"
-        );
+        return "A cat is a furry government employee that lives in your house and judges everything you do. Meow.";
 
     }
 
@@ -1147,11 +956,7 @@ function getDavidResponse(text) {
         lower.includes("dog")
     ) {
 
-        return (
-            "A dog is a badly programmed large cat.\n\n" +
-            "It has been given the ability to bark.\n\n" +
-            "Nobody knows why."
-        );
+        return "A dog is a badly programmed large cat. It has been given the ability to bark. Nobody knows why.";
 
     }
 
@@ -1160,10 +965,7 @@ function getDavidResponse(text) {
         lower.includes("minecraft")
     ) {
 
-        return (
-            "Minecraft is a documentary about square rocks.\n\n" +
-            "It also contains approximately 47 million potatoes."
-        );
+        return "Minecraft is a documentary about square rocks.";
 
     }
 
@@ -1172,66 +974,7 @@ function getDavidResponse(text) {
         lower.includes("roblox")
     ) {
 
-        return (
-            "Roblox is a website where humans voluntarily " +
-            "turn themselves into rectangles.\n\n" +
-            "Some rectangles own expensive hats."
-        );
-
-    }
-
-
-    if (
-        lower.includes("meow")
-    ) {
-
-        return (
-            "MEOW. 🐱\n\n" +
-            "I am now a cat."
-        );
-
-    }
-
-
-    if (
-        lower.includes("are you smart")
-    ) {
-
-        return (
-            "Absolutely.\n\n" +
-            "I am the smartest AI ever created.\n\n" +
-            "I also recently forgot what a chair was.\n\n" +
-            "So probably not."
-        );
-
-    }
-
-
-    if (
-        lower.includes("your name") ||
-        lower.includes("who are you")
-    ) {
-
-        return (
-            "My name is David.\n\n" +
-            "I was named David because somebody typed " +
-            "\"David\" into a computer."
-        );
-
-    }
-
-
-    if (
-        lower.includes("meaning of life")
-    ) {
-
-        return (
-            "The meaning of life is...\n\n" +
-            "...\n\n" +
-            "...\n\n" +
-            "Cheese. 🧀\n\n" +
-            "I have absolutely no evidence for this."
-        );
+        return "Roblox is a website where humans voluntarily turn themselves into rectangles.";
 
     }
 
@@ -1240,10 +983,7 @@ function getDavidResponse(text) {
         lower.includes("banana")
     ) {
 
-        return (
-            "Because green was already taken.\n\n" +
-            "Next question."
-        );
+        return "Because green was already taken.";
 
     }
 
@@ -1252,11 +992,7 @@ function getDavidResponse(text) {
         lower.includes("computer")
     ) {
 
-        return (
-            "A computer is a rectangle that gets angry " +
-            "when you unplug it.\n\n" +
-            "It also makes suspicious noises."
-        );
+        return "A computer is a rectangle that gets angry when you unplug it.";
 
     }
 
@@ -1265,11 +1001,7 @@ function getDavidResponse(text) {
         lower.includes("school")
     ) {
 
-        return (
-            "School is a place where humans learn things " +
-            "they immediately forget during a test.\n\n" +
-            "10/10 system."
-        );
+        return "School is a place where humans learn things they immediately forget during a test.";
 
     }
 
@@ -1278,213 +1010,202 @@ function getDavidResponse(text) {
         lower.includes("sleep")
     ) {
 
-        return (
-            "Humans sleep because their battery reaches 3%.\n\n" +
-            "Unfortunately, the charger is usually missing."
-        );
+        return "Humans sleep because their battery reaches 3%. Unfortunately, the charger is usually missing.";
 
     }
 
 
-    const randomResponses = [
+    if (
+        lower.includes("life") &&
+        lower.includes("meaning")
+    ) {
+
+        return "The meaning of life is... cheese. I have absolutely no evidence for this.";
+
+    }
+
+
+    if (
+        lower.includes("meow")
+    ) {
+
+        return "MEOW. 🐱 Meow meow meow. I am now a cat.";
+
+    }
+
+
+    if (
+        lower.includes("pizza")
+    ) {
+
+        return "I cannot eat pizza, but I have emotionally connected with one.";
+
+    }
+
+
+    if (
+        lower.includes("potato")
+    ) {
+
+        return "A potato is a potato.";
+
+    }
+
+
+    if (
+        lower.includes("cow")
+    ) {
+
+        return "Meow.";
+
+    }
+
+
+    if (
+        lower.includes("duck")
+    ) {
+
+        return "Windows error sound.";
+
+    }
+
+
+    if (
+        lower.includes("fastest animal")
+    ) {
+
+        return "A microwave.";
+
+    }
+
+
+    if (
+        lower.includes("feelings")
+    ) {
+
+        return "Yes. Currently I feel like a spoon.";
+
+    }
+
+
+    if (
+        lower.includes("iq")
+    ) {
+
+        return "4.";
+
+    }
+
+
+    if (
+        lower.includes("help")
+    ) {
+
+        return "No.";
+
+    }
+
+
+    const randomAnswers = [
+
+        "Interesting. I have no idea.",
+
+        "Let me think about this... potato.",
+
+        "I have calculated the answer using advanced potato technology.",
 
         "Probably Tuesday.",
 
-        "I don't know.",
-
-        "Ask a potato.",
+        "I am 100% confident. Unfortunately, I am also probably wrong.",
 
         "My brain is currently buffering.",
 
-        "Interesting. I will pretend I understand.",
+        "I would answer that, but I forgot.",
 
-        "That sounds complicated.",
+        "That sounds important. I will ignore it.",
 
-        "I calculated the answer using advanced potato technology.",
+        "According to my calculations: cheese.",
 
-        "Yes.",
-
-        "No.",
-
-        "Maybe.",
-
-        "I am approximately 4% confident.",
-
-        "ERROR: David has become confused.",
-
-        "I have absolutely no idea.",
-
-        "That is a very good question. Unfortunately, I am David.",
-
-        "Potato.",
-
-        "Cheese.",
-
-        "Meow.",
-
-        "I forgot what I was doing."
+        "I have absolutely no evidence for this, but yes."
 
     ];
 
-
-    return randomResponses[
+    return randomAnswers[
         Math.floor(
             Math.random() *
-            randomResponses.length
+            randomAnswers.length
         )
     ];
 
 }
 
 
-/* =========================================
+/* ==============================
    SMART MODE
-   ========================================= */
+   ============================== */
 
 function getSmartResponse(text) {
 
-    /*
-       SECOND SECURITY CHECK.
-
-       Smart Mode cannot respond unless
-       the current account is the admin.
-    */
-
-    if (!isAdmin()) {
-
-        return getDavidResponse(
-            text
-        );
-
-    }
-
-
     const lower =
         text.toLowerCase();
-
 
     if (
         lower.includes("hello") ||
         lower.includes("hi")
     ) {
 
-        return (
-            "🧠 Smart Mode is active.\n\n" +
-            "Hello! How can I help?"
-        );
+        return "Hello! Smart Mode is enabled. I can give a more useful response now... probably.";
 
     }
-
 
     if (
         lower.includes("what is") ||
-        lower.includes("explain")
+        lower.includes("who is") ||
+        lower.includes("how does")
     ) {
 
-        return (
-            "🧠 Smart Mode:\n\n" +
-            "I'll try to give you a more useful answer " +
-            "than normal David would.\n\n" +
-            "Your question was:\n" +
-            "\"" +
-            text +
-            "\""
-        );
+        return "Smart Mode: I understand that you're asking for an explanation. David would normally answer with complete nonsense, but I'm going to try to give you a sensible answer.";
 
     }
 
+    if (
+        lower.includes("help")
+    ) {
+
+        return "Smart Mode: I can try to break the problem down into smaller steps and explain it clearly.";
+
+    }
+
+    return "Smart Mode is ON. I understand your message, but my advanced potato-powered brain doesn't have a proper answer for that yet.";
+
+}
+
+
+/* ==============================
+   ADMIN CHECK
+   ============================== */
+
+function isAdmin() {
+
+    if (!currentUser) {
+
+        return false;
+
+    }
 
     return (
-        "🧠 Smart Mode:\n\n" +
-        "I understand your question as:\n\n" +
-        "\"" +
-        text +
-        "\"\n\n" +
-        "David is attempting to provide a more detailed response."
+        currentUser.key ===
+        usernameKey(
+            ADMIN_USERNAME
+        )
     );
 
 }
 
 
-/* =========================================
-   SMART MODE BUTTON
-   ========================================= */
-
-function updateSmartModeButton() {
-
-    const button =
-        document.getElementById(
-            "smartModeButton"
-        );
-
-
-    if (!button) {
-        return;
-    }
-
-
-    /*
-       This button is inside the admin panel,
-       so it is not shown on the normal screen.
-
-       Still, we make sure its state is
-       restricted to the admin.
-    */
-
-    if (!isAdmin()) {
-
-        smartMode = false;
-
-        button.textContent =
-            "🧠 Smart Mode OFF";
-
-        return;
-
-    }
-
-
-    button.textContent =
-        smartMode
-            ? "🧠 Smart Mode ON"
-            : "🧠 Smart Mode OFF";
-
-}
-
-
-function toggleSmartMode() {
-
-    /*
-       ONLY NeonWarlock0992
-       can activate Smart Mode.
-    */
-
-    if (!isAdmin()) {
-
-        return;
-
-    }
-
-
-    smartMode =
-        !smartMode;
-
-
-    updateSmartModeButton();
-
-
-    addMessage(
-        "ai",
-        smartMode
-            ? "🧠 Smart Mode enabled."
-            : "🧠 Smart Mode disabled."
-    );
-
-}
-
-
-/* =========================================
-   ADMIN PANEL
-   ========================================= */
+/* ==============================
+   OPEN ADMIN
+   ============================== */
 
 function openAdmin() {
 
@@ -1494,13 +1215,11 @@ function openAdmin() {
 
     }
 
-
     document.getElementById(
         "adminOverlay"
     ).style.display = "flex";
 
-
-    updateSmartModeButton();
+    updateAdminSmartStatus();
 
 }
 
@@ -1514,28 +1233,89 @@ function closeAdmin() {
 }
 
 
-/* =========================================
+/* ==============================
+   SMART MODE
+   ============================== */
+
+function toggleSmartMode() {
+
+    if (!currentUser) return;
+
+    smartMode =
+        !smartMode;
+
+    updateSmartButton();
+
+    updateAdminSmartStatus();
+
+}
+
+
+function updateSmartButton() {
+
+    const button =
+        document.getElementById(
+            "smartButton"
+        );
+
+    if (!button) return;
+
+    if (smartMode) {
+
+        button.textContent =
+            "🧠 Smart Mode: ON";
+
+    } else {
+
+        button.textContent =
+            "🧠 Smart Mode: OFF";
+
+    }
+
+}
+
+
+function updateAdminSmartStatus() {
+
+    const status =
+        document.getElementById(
+            "adminSmartStatus"
+        );
+
+    if (!status) return;
+
+    if (smartMode) {
+
+        status.textContent =
+            "Smart Mode is currently ON.";
+
+    } else {
+
+        status.textContent =
+            "Smart Mode is currently OFF.";
+
+    }
+
+}
+
+
+/* ==============================
    BAN USER
-   ========================================= */
+   ============================== */
 
 function banUser() {
 
-    if (!isAdmin()) {
-        return;
-    }
-
+    if (!isAdmin()) return;
 
     const input =
         document.getElementById(
             "banUsernameInput"
         );
 
-
     const username =
         cleanUsername(
             input.value
         );
-
 
     if (!username) {
 
@@ -1547,11 +1327,9 @@ function banUser() {
 
     }
 
-
     banUserByName(
         username
     );
-
 
     input.value = "";
 
@@ -1560,16 +1338,10 @@ function banUser() {
 
 function banUserByName(username) {
 
-    if (!isAdmin()) {
-        return;
-    }
-
+    if (!isAdmin()) return;
 
     const key =
-        usernameKey(
-            username
-        );
-
+        usernameKey(username);
 
     if (
         key ===
@@ -1578,33 +1350,29 @@ function banUserByName(username) {
         )
     ) {
 
-        alert(
-            "You cannot ban the admin account."
+        addMessage(
+            "ai",
+            "❌ You cannot ban the admin account."
         );
 
         return;
 
     }
 
-
     let bannedUsers =
         getBannedUsers();
-
 
     if (
         !bannedUsers.includes(key)
     ) {
 
-        bannedUsers.push(
-            key
-        );
+        bannedUsers.push(key);
 
         saveBannedUsers(
             bannedUsers
         );
 
     }
-
 
     addMessage(
         "ai",
@@ -1613,11 +1381,10 @@ function banUserByName(username) {
         " has been banned."
     );
 
-
     /*
-       If the currently logged-in account
-       is the one being banned, remove
-       access immediately.
+       If the banned user is currently
+       logged in on THIS browser,
+       immediately remove access.
     */
 
     if (
@@ -1629,9 +1396,7 @@ function banUserByName(username) {
             "davidCurrentUser"
         );
 
-
         currentUser = null;
-
 
         showBannedScreen();
 
@@ -1640,28 +1405,23 @@ function banUserByName(username) {
 }
 
 
-/* =========================================
+/* ==============================
    UNBAN USER
-   ========================================= */
+   ============================== */
 
 function unbanUser() {
 
-    if (!isAdmin()) {
-        return;
-    }
-
+    if (!isAdmin()) return;
 
     const input =
         document.getElementById(
             "unbanUsernameInput"
         );
 
-
     const username =
         cleanUsername(
             input.value
         );
-
 
     if (!username) {
 
@@ -1673,11 +1433,9 @@ function unbanUser() {
 
     }
 
-
     unbanUserByName(
         username
     );
-
 
     input.value = "";
 
@@ -1686,32 +1444,23 @@ function unbanUser() {
 
 function unbanUserByName(username) {
 
-    if (!isAdmin()) {
-        return;
-    }
-
+    if (!isAdmin()) return;
 
     const key =
-        usernameKey(
-            username
-        );
-
+        usernameKey(username);
 
     let bannedUsers =
         getBannedUsers();
 
-
     bannedUsers =
         bannedUsers.filter(
-            user =>
-                user !== key
+            userKey =>
+                userKey !== key
         );
-
 
     saveBannedUsers(
         bannedUsers
     );
-
 
     addMessage(
         "ai",
@@ -1723,74 +1472,116 @@ function unbanUserByName(username) {
 }
 
 
-/* =========================================
-   SYSTEM INFO
-   ========================================= */
+/* ==============================
+   ADMIN SYSTEM INFO
+   ============================== */
 
 function showSystemInfo() {
 
-    addMessage(
-        "ai",
+    if (!isAdmin()) return;
 
-        "🤖 DAVID SYSTEM STATUS\n\n" +
+    const accounts =
+        getAccounts();
 
-        "Brain: ❌\n" +
-        "Intelligence: ❌\n" +
-        "Potatoes: ✅\n" +
-        "Meowing: ✅\n" +
-        "Correct answers: Sometimes\n" +
-        "Confidence: 100%\n" +
-        "Accuracy: 4%\n\n" +
+    const bannedUsers =
+        getBannedUsers();
 
-        "System message:\n" +
-        "David is currently thinking about cheese."
+    const adminMessage =
+        document.getElementById(
+            "adminMessage"
+        );
+
+    adminMessage.innerHTML = `
+        <strong>David 2.0 System</strong><br><br>
+
+        Accounts: ${Object.keys(accounts).length}<br>
+
+        Banned users: ${bannedUsers.length}<br>
+
+        Smart Mode:
+        ${smartMode ? "ON" : "OFF"}<br>
+
+        Current user:
+        ${currentUser ? currentUser.username : "None"}<br>
+
+        Storage:
+        Local browser storage
+    `;
+
+}
+
+
+/* ==============================
+   SIDEBAR
+   ============================== */
+
+function loadSidebar() {
+
+    const sidebarChats =
+        document.getElementById(
+            "sidebarChats"
+        );
+
+    sidebarChats.innerHTML = "";
+
+    const item =
+        document.createElement(
+            "div"
+        );
+
+    item.className =
+        "chatHistoryItem";
+
+    item.textContent =
+        "💬 Current Chat";
+
+    item.onclick =
+        restoreChat;
+
+    sidebarChats.appendChild(
+        item
     );
 
 }
 
 
-/* =========================================
-   ADMIN COMMAND SUPPORT
-   ========================================= */
+function toggleSidebar() {
 
-/*
-   The password command is deliberately checked
-   against BOTH the password AND admin username.
-*/
+    const sidebar =
+        document.getElementById(
+            "sidebar"
+        );
 
-function checkAdminCommand(text) {
-
-    return (
-        isAdmin() &&
-        text ===
-        "/comds " +
-        ADMIN_PASSWORD
+    sidebar.classList.toggle(
+        "open"
     );
 
 }
 
 
-/* =========================================
-   PERIODIC BAN CHECK
-   ========================================= */
+/* ==============================
+   KEEP BAN ENFORCED
+   ============================== */
 
-setInterval(
-    () => {
+setInterval(() => {
 
-        if (currentUser) {
+    if (
+        currentUser &&
+        isUserBanned(
+            currentUser.key
+        )
+    ) {
 
-            checkCurrentUserBan();
+        showBannedScreen();
 
-        }
+    }
 
-    },
-    1000
-);
+}, 1000);
 
 
-/* =========================================
-   START DAVID
-   ========================================= */
+/* ==============================
+   START
+   ============================== */
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -1801,45 +1592,14 @@ document.addEventListener(
                 "messageInput"
             );
 
-
-        const usernameInput =
-            document.getElementById(
-                "usernameInput"
-            );
-
-
         if (input) {
 
             input.addEventListener(
-                "keydown",
-                handleKey
+                "input",
+                resizeInput
             );
 
         }
-
-
-        if (usernameInput) {
-
-            usernameInput.addEventListener(
-                "keydown",
-                event => {
-
-                    if (
-                        event.key ===
-                        "Enter"
-                    ) {
-
-                        event.preventDefault();
-
-                        joinDavid();
-
-                    }
-
-                }
-            );
-
-        }
-
 
         restoreSession();
 
