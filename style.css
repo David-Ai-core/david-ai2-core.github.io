@@ -1,713 +1,318 @@
-/* =========================
-   GENERAL
-   ========================= */
 
 * {
     box-sizing: border-box;
 }
 
-html,
 body {
     margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #ffffff;
+    font-family: Arial, sans-serif;
+    background: #f1f3f6;
     color: #222;
 }
 
-button,
-input,
-textarea {
-    font-family: inherit;
-}
+/* LOGIN SCREEN */
 
-button {
-    cursor: pointer;
-}
-
-
-/* =========================
-   LOGIN
-   ========================= */
-
-#loginScreen {
-    width: 100%;
+.screen {
     min-height: 100vh;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
-    background: #f4f4f4;
+    text-align: center;
+    background: linear-gradient(135deg, #673ab7, #2196f3);
 }
 
 .loginBox {
+    background: white;
     width: 420px;
     max-width: 90%;
-
-    background: white;
-
-    padding: 35px;
-
-    border: 1px solid #ddd;
-    border-radius: 8px;
-
-    text-align: center;
-
-    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    padding: 35px 25px;
+    border-radius: 14px;
+    box-shadow: 0 10px 35px #0004;
 }
 
 .loginBox h1 {
-    margin: 0 0 8px;
+    margin-top: 0;
     font-size: 32px;
 }
 
 .loginBox h2 {
-    margin: 0 0 20px;
     font-size: 17px;
     font-weight: normal;
     color: #666;
 }
 
-.loginBox p {
-    color: #555;
+input,
+textarea {
+    font-family: inherit;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    outline: none;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #673ab7;
 }
 
 .loginBox input {
     width: 100%;
-
-    padding: 12px;
-
-    border: 1px solid #bbb;
-    border-radius: 5px;
-
-    font-size: 16px;
-
-    margin-top: 10px;
+    margin: 15px 0;
 }
 
-.loginBox button {
-    width: 100%;
-
-    padding: 12px;
-
-    margin-top: 12px;
-
+button {
     border: none;
-    border-radius: 5px;
-
-    background: #111;
+    border-radius: 8px;
+    padding: 11px 16px;
+    background: #673ab7;
     color: white;
-
-    font-size: 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
 }
 
-.loginBox button:hover {
-    background: #333;
+button:hover {
+    background: #512da8;
 }
 
-#loginMessage {
-    color: #d00;
-    min-height: 20px;
+.error {
+    color: #d32f2f;
 }
 
+.smallText {
+    font-size: 14px;
+    color: #777;
+}
 
-/* =========================
-   BANNED SCREEN
-   ========================= */
+/* BANNED SCREEN */
 
-#bannedScreen {
+.bannedScreen {
     display: none;
-
-    position: fixed;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
     background: #111;
-
     color: white;
-
-    align-items: center;
-    justify-content: center;
-
-    text-align: center;
-
-    z-index: 999999;
-}
-
-.bannedBox {
-    width: 500px;
-    max-width: 90%;
-
-    padding: 40px 25px;
 }
 
 .bannedIcon {
     font-size: 70px;
-
     margin-bottom: 15px;
 }
 
-.bannedBox h1 {
-    font-size: 42px;
-
-    margin: 10px 0;
-}
-
-.bannedBox p {
-    font-size: 18px;
-
-    color: #ddd;
-}
-
-.bannedSmall {
-    font-size: 14px !important;
-
-    color: #999 !important;
-}
-
-
-/* =========================
-   MAIN APP
-   ========================= */
+/* MAIN APP */
 
 #app {
     display: none;
-
-    width: 100%;
-    height: 100vh;
-
-    overflow: hidden;
 }
 
-
-/* =========================
-   SIDEBAR
-   ========================= */
-
-#sidebar {
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
     width: 250px;
-
-    height: 100vh;
-
-    background: #f5f5f5;
-
-    border-right: 1px solid #ddd;
-
-    display: flex;
-    flex-direction: column;
-
-    flex-shrink: 0;
-}
-
-.sidebarTop {
-    padding: 18px;
-
-    border-bottom: 1px solid #ddd;
-}
-
-.sidebarTop h2 {
-    margin: 0 0 15px;
-
-    font-size: 20px;
-}
-
-.sidebarTop button {
-    width: 100%;
-
-    padding: 10px;
-
-    border: 1px solid #ccc;
-    border-radius: 5px;
-
-    background: white;
-
-    font-size: 14px;
-}
-
-.sidebarTop button:hover {
-    background: #eaeaea;
-}
-
-.sidebarChats {
-    flex: 1;
-
+    padding: 20px;
+    background: #202124;
+    color: white;
     overflow-y: auto;
-
-    padding: 10px;
 }
 
-.chatHistoryItem {
-    padding: 10px;
-
-    margin-bottom: 5px;
-
-    border-radius: 5px;
-
-    cursor: pointer;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.sidebar h2 {
+    margin-top: 0;
 }
 
-.chatHistoryItem:hover {
-    background: #e5e5e5;
+.sidebar button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    background: #3c4043;
+    text-align: left;
 }
 
-.sidebarBottom {
-    padding: 12px;
-
-    border-top: 1px solid #ddd;
+.sidebar button:hover {
+    background: #555;
 }
 
-.accountBox {
-    display: flex;
-    flex-direction: column;
-
-    margin-bottom: 10px;
-
+.sidebarTitle {
+    color: #aaa;
     font-size: 13px;
+    text-transform: uppercase;
 }
 
-.accountBox strong {
+#smartStatus {
     font-size: 12px;
-    color: #777;
+    color: #aaa;
 }
 
-.sidebarBottom button {
-    width: 100%;
+/* MAIN CONTENT */
 
-    padding: 9px;
+.main {
+    margin-left: 250px;
+    min-height: 100vh;
+    padding-bottom: 100px;
+}
 
-    margin-top: 6px;
-
-    border: 1px solid #ccc;
-    border-radius: 5px;
-
+.header {
     background: white;
-}
-
-.sidebarBottom button:hover {
-    background: #e8e8e8;
-}
-
-.logoutButton {
-    color: #b00000;
-}
-
-
-/* =========================
-   MAIN AREA
-   ========================= */
-
-#main {
-    flex: 1;
-
-    min-width: 0;
-
-    height: 100vh;
-
-    display: flex;
-    flex-direction: column;
-}
-
-#header {
-    min-height: 70px;
-
-    display: flex;
-    align-items: center;
-
-    gap: 12px;
-
-    padding: 12px 20px;
-
+    padding: 20px 25px;
     border-bottom: 1px solid #ddd;
-
-    background: white;
 }
 
-#header h1 {
+.header h1 {
     margin: 0;
-
-    font-size: 22px;
+    font-size: 25px;
 }
 
-#header p {
-    margin: 3px 0 0;
-
-    font-size: 13px;
-
-    color: #777;
+.header p {
+    margin-bottom: 0;
+    color: #666;
 }
 
-.menuButton {
-    display: none;
+/* CHAT */
 
-    border: none;
-
-    background: transparent;
-
-    font-size: 22px;
-}
-
-
-/* =========================
-   CHAT
-   ========================= */
-
-#chat {
-    flex: 1;
-
-    overflow-y: auto;
-
-    padding: 25px;
-
-    background: white;
-}
-
-.welcomeMessage {
-    max-width: 750px;
-
-    margin: 20px auto;
-
-    color: #444;
-}
-
-.welcomeMessage h2 {
-    color: #222;
+.chat {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 25px 18px;
 }
 
 .message {
-    max-width: 750px;
-
-    margin: 10px auto;
-
-    display: flex;
+    width: fit-content;
+    max-width: 85%;
+    margin: 12px 0;
+    padding: 13px 16px;
+    border-radius: 12px;
+    overflow-wrap: anywhere;
 }
 
-.message.user {
-    justify-content: flex-end;
+.message p {
+    margin: 7px 0 0;
 }
 
 .message.ai {
-    justify-content: flex-start;
+    background: white;
+    border: 1px solid #ddd;
 }
 
-.messageBubble {
-    max-width: 75%;
-
-    padding: 10px 14px;
-
-    border-radius: 8px;
-
-    line-height: 1.45;
-
-    word-wrap: break-word;
-}
-
-.message.user .messageBubble {
-    background: #222;
+.message.user {
+    background: #673ab7;
     color: white;
+    margin-left: auto;
 }
 
-.message.ai .messageBubble {
-    background: #f1f1f1;
-    color: #222;
-}
-
-
-/* =========================
-   TYPING
-   ========================= */
-
-.typingBubble {
-    max-width: 750px;
-
-    margin: 10px auto;
-
-    color: #777;
-
-    font-size: 14px;
-}
-
-
-/* =========================
-   INPUT
-   ========================= */
+/* INPUT AREA */
 
 .inputArea {
-    width: 100%;
-
-    padding: 8px 15px 12px;
-
-    background: white;
-
+    position: fixed;
+    bottom: 0;
+    left: 250px;
+    right: 0;
+    padding: 10px 15px 15px;
+    background: #f1f3f6;
     border-top: 1px solid #ddd;
 }
 
 .inputBox {
-    width: 100%;
-
-    max-width: 750px;
-
-    margin: 0 auto;
-
     display: flex;
-
     align-items: flex-end;
-
     gap: 8px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .inputBox textarea {
     flex: 1;
-
-    min-width: 0;
-
-    min-height: 42px;
-    max-height: 140px;
-
+    min-height: 43px;
+    max-height: 130px;
     resize: none;
-
-    padding: 10px 12px;
-
-    border: 1px solid #bbb;
-
-    border-radius: 6px;
-
-    outline: none;
-
-    font-size: 15px;
-}
-
-.inputBox textarea:focus {
-    border-color: #777;
 }
 
 .inputBox button {
-    width: 42px;
-    height: 42px;
-
-    flex-shrink: 0;
-
-    border: none;
-
-    border-radius: 6px;
-
-    background: #222;
-
-    color: white;
-
-    font-size: 18px;
+    height: 43px;
 }
 
-.inputBox button:hover {
-    background: #444;
-}
+/* ADMIN PANEL */
 
-
-/* =========================
-   ADMIN OVERLAY
-   ========================= */
-
-#adminOverlay {
+.adminOverlay {
     display: none;
-
     position: fixed;
-
     inset: 0;
-
-    z-index: 9999;
-
-    background: rgba(0,0,0,0.55);
-
+    z-index: 1000;
     align-items: center;
     justify-content: center;
-
+    background: #000b;
     padding: 20px;
 }
 
 .adminPanel {
-    width: 700px;
-
+    position: relative;
+    width: 450px;
     max-width: 100%;
     max-height: 90vh;
-
     overflow-y: auto;
-
     background: white;
-
-    border-radius: 10px;
-
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    padding: 25px;
+    border-radius: 12px;
 }
 
-.adminHeader {
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 20px;
-
-    border-bottom: 1px solid #ddd;
-}
-
-.adminHeader h2 {
-    margin: 0;
-}
-
-.adminHeader p {
-    margin: 4px 0 0;
-
-    color: #777;
-
-    font-size: 13px;
-}
-
-.closeAdmin {
-    width: 38px;
-    height: 38px;
-
-    border: none;
-
-    border-radius: 5px;
-
-    background: #eee;
-
-    font-size: 18px;
-}
-
-.adminContent {
-    padding: 20px;
-}
-
-.adminCard {
-    padding: 18px;
-
-    margin-bottom: 15px;
-
-    border: 1px solid #ddd;
-
-    border-radius: 8px;
-}
-
-.adminCard h3 {
+.adminPanel h1 {
     margin-top: 0;
 }
 
-.adminCard p {
-    color: #666;
+.adminPanel input {
+    width: 100%;
+    margin: 7px 0;
 }
 
-.adminCard button {
-    padding: 9px 14px;
-
-    border: 1px solid #bbb;
-
-    border-radius: 5px;
-
-    background: white;
+.adminPanel button {
+    margin: 5px 0;
 }
 
-.adminCard button:hover {
-    background: #eee;
-}
-
-.adminInputRow {
-    display: flex;
-
-    gap: 8px;
-}
-
-.adminInputRow input {
-    flex: 1;
-
-    min-width: 0;
-
-    padding: 10px;
-
-    border: 1px solid #bbb;
-
-    border-radius: 5px;
-
-    font-size: 15px;
+.closeButton {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #d32f2f;
 }
 
 #adminMessage {
-    margin-top: 12px;
-
-    padding: 10px;
-
-    color: #444;
+    white-space: pre-wrap;
 }
 
-
-/* =========================
-   MOBILE
-   ========================= */
+/* MOBILE */
 
 @media (max-width: 700px) {
 
-    #sidebar {
-        position: absolute;
-
-        left: -260px;
-
-        top: 0;
-
-        z-index: 5000;
-
-        transition: left 0.2s ease;
+    .sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
     }
 
-    #sidebar.open {
-        left: 0;
+    .sidebar button {
+        display: inline-block;
+        width: auto;
+        margin-right: 5px;
     }
 
-    .menuButton {
-        display: block;
-    }
-
-    #header {
-        padding: 10px 12px;
-    }
-
-    #header h1 {
-        font-size: 19px;
-    }
-
-    #chat {
-        padding: 12px;
-    }
-
-    .messageBubble {
-        max-width: 85%;
+    .main {
+        margin-left: 0;
     }
 
     .inputArea {
-        padding: 6px 8px 8px;
+        left: 0;
+        padding: 8px;
     }
 
     .inputBox {
-        max-width: none;
+        max-width: 100%;
     }
 
-    .adminInputRow {
-        flex-direction: column;
+    .message {
+        max-width: 94%;
     }
 
-    .adminInputRow button {
-        width: 100%;
-    }
-
-    .bannedBox h1 {
-        font-size: 34px;
+    .header {
+        padding: 15px;
     }
 }
