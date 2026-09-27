@@ -1,7 +1,6 @@
-/* =========================================
-   DAVID 2.0
-   MAIN STYLESHEET
-   ========================================= */
+/* =========================
+   GENERAL
+   ========================= */
 
 * {
     box-sizing: border-box;
@@ -12,564 +11,521 @@ body {
     margin: 0;
     padding: 0;
     width: 100%;
-    min-height: 100%;
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-}
-
-body {
-    background: #f5f5f5;
+    height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
     color: #222;
 }
 
-
-/* =========================================
-   BUTTONS
-   ========================================= */
+button,
+input,
+textarea {
+    font-family: inherit;
+}
 
 button {
-    font-family: inherit;
     cursor: pointer;
 }
 
-button:active {
-    transform: scale(0.98);
-}
 
-
-/* =========================================
+/* =========================
    LOGIN
-   ========================================= */
+   ========================= */
 
 #loginScreen {
+    width: 100%;
     min-height: 100vh;
-    width: 100%;
+
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 25px;
-    background:
-        linear-gradient(
-            135deg,
-            #f5f5f5,
-            #e9e9e9
-        );
+    justify-content: center;
+
+    background: #f4f4f4;
 }
 
-.loginContainer {
-    width: 100%;
-    max-width: 520px;
-    text-align: center;
-}
+.loginBox {
+    width: 420px;
+    max-width: 90%;
 
-.loginLogo {
-    font-size: 70px;
-    margin-bottom: 5px;
-}
-
-.loginContainer h1 {
-    margin: 0;
-    font-size: 42px;
-    font-weight: 800;
-}
-
-.loginSubtitle {
-    margin-top: 8px;
-    color: #666;
-    font-size: 17px;
-}
-
-.loginCard {
-    margin-top: 30px;
-    padding: 30px;
     background: white;
-    border-radius: 14px;
+
+    padding: 35px;
+
     border: 1px solid #ddd;
-    box-shadow:
-        0 8px 30px rgba(0,0,0,0.08);
+    border-radius: 8px;
+
+    text-align: center;
+
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
 }
 
-.loginCard h2 {
-    margin-top: 0;
+.loginBox h1 {
+    margin: 0 0 8px;
+    font-size: 32px;
 }
 
-.loginCard p {
+.loginBox h2 {
+    margin: 0 0 20px;
+    font-size: 17px;
+    font-weight: normal;
     color: #666;
 }
 
-.loginCard input {
+.loginBox p {
+    color: #555;
+}
+
+.loginBox input {
     width: 100%;
-    padding: 14px;
-    margin-top: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+
+    padding: 12px;
+
+    border: 1px solid #bbb;
+    border-radius: 5px;
+
     font-size: 16px;
-    outline: none;
+
+    margin-top: 10px;
 }
 
-.loginCard input:focus {
-    border-color: #555;
-}
-
-.primaryButton {
+.loginBox button {
     width: 100%;
+
+    padding: 12px;
+
     margin-top: 12px;
-    padding: 14px;
+
     border: none;
-    border-radius: 8px;
-    background: #222;
+    border-radius: 5px;
+
+    background: #111;
     color: white;
+
     font-size: 16px;
-    font-weight: bold;
 }
 
-.primaryButton:hover {
+.loginBox button:hover {
     background: #333;
 }
 
 #loginMessage {
+    color: #d00;
     min-height: 20px;
-    color: #c62828;
 }
 
 
-/* =========================================
+/* =========================
    BANNED SCREEN
-   ========================================= */
+   ========================= */
 
 #bannedScreen {
     display: none;
+
     position: fixed;
+
     inset: 0;
+
     width: 100%;
-    min-height: 100vh;
+    height: 100%;
+
     background: #111;
+
     color: white;
+
     align-items: center;
     justify-content: center;
+
     text-align: center;
+
     z-index: 999999;
-    padding: 20px;
 }
 
 .bannedBox {
     width: 500px;
     max-width: 90%;
+
     padding: 40px 25px;
 }
 
 .bannedIcon {
     font-size: 70px;
+
     margin-bottom: 15px;
 }
 
 .bannedBox h1 {
     font-size: 42px;
+
     margin: 10px 0;
 }
 
 .bannedBox p {
     font-size: 18px;
+
     color: #ddd;
 }
 
 .bannedSmall {
     font-size: 14px !important;
+
     color: #999 !important;
 }
 
 
-/* =========================================
+/* =========================
    MAIN APP
-   ========================================= */
+   ========================= */
 
 #app {
     display: none;
+
     width: 100%;
-    min-height: 100vh;
-    background: #f7f7f7;
+    height: 100vh;
+
+    overflow: hidden;
 }
 
 
-/* =========================================
-   TOP BAR
-   ========================================= */
-
-.topBar {
-    height: 68px;
-    width: 100%;
-    background: white;
-    border-bottom: 1px solid #ddd;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 20px;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.brandEmoji {
-    font-size: 30px;
-}
-
-.brandTitle {
-    font-size: 19px;
-    font-weight: 800;
-}
-
-.brandSubtitle {
-    font-size: 12px;
-    color: #777;
-    margin-top: 2px;
-}
-
-.topBarButtons {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.headerButton {
-    border: 1px solid #ddd;
-    background: white;
-    color: #222;
-    border-radius: 7px;
-    padding: 9px 13px;
-    font-size: 14px;
-}
-
-.headerButton:hover {
-    background: #f1f1f1;
-}
-
-
-/* =========================================
-   MAIN LAYOUT
-   ========================================= */
-
-.mainLayout {
-    display: flex;
-    min-height: calc(100vh - 68px);
-}
-
-
-/* =========================================
+/* =========================
    SIDEBAR
-   ========================================= */
+   ========================= */
 
-.sidebar {
-    width: 245px;
-    flex-shrink: 0;
-    background: #eeeeee;
-    border-right: 1px solid #d5d5d5;
+#sidebar {
+    width: 250px;
+
+    height: 100vh;
+
+    background: #f5f5f5;
+
+    border-right: 1px solid #ddd;
 
     display: flex;
     flex-direction: column;
 
-    padding: 18px 14px;
+    flex-shrink: 0;
 }
 
-.sidebarTop h3 {
-    margin: 0 0 14px;
-    font-size: 16px;
+.sidebarTop {
+    padding: 18px;
+
+    border-bottom: 1px solid #ddd;
 }
 
-.newChatButton {
+.sidebarTop h2 {
+    margin: 0 0 15px;
+
+    font-size: 20px;
+}
+
+.sidebarTop button {
     width: 100%;
+
+    padding: 10px;
+
     border: 1px solid #ccc;
+    border-radius: 5px;
+
     background: white;
-    border-radius: 8px;
-    padding: 10px;
+
     font-size: 14px;
-    text-align: left;
 }
 
-.newChatButton:hover {
-    background: #f8f8f8;
+.sidebarTop button:hover {
+    background: #eaeaea;
 }
 
-.sidebarSection {
-    margin-top: 25px;
-}
+.sidebarChats {
+    flex: 1;
 
-.sidebarHeading {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: #777;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
+    overflow-y: auto;
 
-.accountCard {
-    display: flex;
-    align-items: center;
-    gap: 10px;
     padding: 10px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
 }
 
-.accountIcon {
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #eee;
-    border-radius: 50%;
-}
+.chatHistoryItem {
+    padding: 10px;
 
-.accountInfo {
-    min-width: 0;
-}
+    margin-bottom: 5px;
 
-#accountUsername {
-    font-weight: bold;
-    font-size: 14px;
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.accountStatus {
-    color: #278b43;
-    font-size: 11px;
-    margin-top: 2px;
-}
-
-.sidebarButton {
-    display: block;
-    width: 100%;
-    border: none;
-    background: transparent;
-    padding: 10px;
-    border-radius: 7px;
-    text-align: left;
-    font-size: 14px;
-}
-
-.sidebarButton:hover {
-    background: #ddd;
-}
-
-
-/*
-   Admin button starts hidden.
-   JavaScript only reveals it for
-   NeonWarlock0992.
-*/
-
-.adminSidebarArea {
-    display: none;
-}
-
-.adminButton {
-    width: 100%;
-    border: 1px solid #bbb;
-    background: #222;
-    color: white;
-    padding: 10px;
-    border-radius: 7px;
-    font-size: 14px;
-}
-
-.adminButton:hover {
-    background: #333;
+.chatHistoryItem:hover {
+    background: #e5e5e5;
 }
 
 .sidebarBottom {
-    margin-top: auto;
-    padding-top: 20px;
+    padding: 12px;
+
+    border-top: 1px solid #ddd;
 }
 
-.sidebarStatus {
-    font-size: 12px;
-    color: #4d4d4d;
-}
-
-
-/* =========================================
-   CHAT AREA
-   ========================================= */
-
-.chatArea {
-    flex: 1;
-    min-width: 0;
+.accountBox {
     display: flex;
     flex-direction: column;
+
+    margin-bottom: 10px;
+
+    font-size: 13px;
+}
+
+.accountBox strong {
+    font-size: 12px;
+    color: #777;
+}
+
+.sidebarBottom button {
+    width: 100%;
+
+    padding: 9px;
+
+    margin-top: 6px;
+
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
     background: white;
 }
 
-.chatHeader {
-    min-height: 75px;
-    padding: 15px 25px;
-    border-bottom: 1px solid #e1e1e1;
+.sidebarBottom button:hover {
+    background: #e8e8e8;
+}
+
+.logoutButton {
+    color: #b00000;
+}
+
+
+/* =========================
+   MAIN AREA
+   ========================= */
+
+#main {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 100vh;
 
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+}
+
+#header {
+    min-height: 70px;
+
+    display: flex;
     align-items: center;
+
+    gap: 12px;
+
+    padding: 12px 20px;
+
+    border-bottom: 1px solid #ddd;
+
+    background: white;
 }
 
-.chatHeader h2 {
+#header h1 {
     margin: 0;
-    font-size: 19px;
+
+    font-size: 22px;
 }
 
-.chatHeader p {
-    margin: 4px 0 0;
+#header p {
+    margin: 3px 0 0;
+
+    font-size: 13px;
+
     color: #777;
-    font-size: 12px;
 }
 
-.smartStatus {
+.menuButton {
     display: none;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 22px;
 }
 
 
-/* =========================================
-   CHAT MESSAGES
-   ========================================= */
+/* =========================
+   CHAT
+   ========================= */
 
-.chatMessages {
+#chat {
     flex: 1;
+
     overflow-y: auto;
+
     padding: 25px;
+
+    background: white;
+}
+
+.welcomeMessage {
+    max-width: 750px;
+
+    margin: 20px auto;
+
+    color: #444;
+}
+
+.welcomeMessage h2 {
+    color: #222;
 }
 
 .message {
-    width: 100%;
-    margin-bottom: 18px;
-}
+    max-width: 750px;
 
-.messageInner {
-    max-width: 800px;
-}
+    margin: 10px auto;
 
-.message.user .messageInner {
-    margin-left: auto;
-}
-
-.message.ai .messageInner {
-    margin-right: auto;
-}
-
-.messageName {
-    font-size: 11px;
-    color: #777;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.messageBubble {
-    display: inline-block;
-    max-width: min(800px, 90%);
-    padding: 12px 15px;
-    border-radius: 10px;
-    background: #eeeeee;
-    line-height: 1.45;
-    white-space: pre-wrap;
-    word-break: break-word;
+    display: flex;
 }
 
 .message.user {
-    text-align: right;
+    justify-content: flex-end;
+}
+
+.message.ai {
+    justify-content: flex-start;
+}
+
+.messageBubble {
+    max-width: 75%;
+
+    padding: 10px 14px;
+
+    border-radius: 8px;
+
+    line-height: 1.45;
+
+    word-wrap: break-word;
 }
 
 .message.user .messageBubble {
     background: #222;
     color: white;
-    text-align: left;
 }
 
-.message.ai {
-    text-align: left;
+.message.ai .messageBubble {
+    background: #f1f1f1;
+    color: #222;
 }
 
 
-/* =========================================
+/* =========================
+   TYPING
+   ========================= */
+
+.typingBubble {
+    max-width: 750px;
+
+    margin: 10px auto;
+
+    color: #777;
+
+    font-size: 14px;
+}
+
+
+/* =========================
    INPUT
-   ========================================= */
+   ========================= */
 
 .inputArea {
     width: 100%;
-    border-top: 1px solid #ddd;
+
+    padding: 8px 15px 12px;
+
     background: white;
-    padding: 12px 20px 14px;
+
+    border-top: 1px solid #ddd;
 }
 
-.inputContainer {
+.inputBox {
     width: 100%;
-    max-width: 850px;
+
+    max-width: 750px;
+
     margin: 0 auto;
 
     display: flex;
+
+    align-items: flex-end;
+
     gap: 8px;
 }
 
-.inputContainer input {
+.inputBox textarea {
     flex: 1;
+
     min-width: 0;
 
-    padding: 12px 14px;
+    min-height: 42px;
+    max-height: 140px;
 
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    resize: none;
+
+    padding: 10px 12px;
+
+    border: 1px solid #bbb;
+
+    border-radius: 6px;
+
+    outline: none;
 
     font-size: 15px;
-    outline: none;
 }
 
-.inputContainer input:focus {
-    border-color: #555;
+.inputBox textarea:focus {
+    border-color: #777;
 }
 
-.sendButton {
-    width: 48px;
+.inputBox button {
+    width: 42px;
+    height: 42px;
+
     flex-shrink: 0;
 
     border: none;
-    border-radius: 8px;
+
+    border-radius: 6px;
 
     background: #222;
+
     color: white;
 
     font-size: 18px;
 }
 
-.sendButton:hover {
-    background: #333;
-}
-
-.inputHint {
-    text-align: center;
-    color: #999;
-    font-size: 10px;
-    margin-top: 5px;
+.inputBox button:hover {
+    background: #444;
 }
 
 
-/* =========================================
+/* =========================
    ADMIN OVERLAY
-   ========================================= */
+   ========================= */
 
-.adminOverlay {
+#adminOverlay {
     display: none;
 
     position: fixed;
+
     inset: 0;
 
-    background: rgba(0,0,0,0.6);
+    z-index: 9999;
 
-    z-index: 10000;
+    background: rgba(0,0,0,0.55);
 
     align-items: center;
     justify-content: center;
@@ -578,27 +534,29 @@ button:active {
 }
 
 .adminPanel {
-    width: 100%;
-    max-width: 650px;
+    width: 700px;
+
+    max-width: 100%;
     max-height: 90vh;
+
     overflow-y: auto;
 
     background: white;
-    border-radius: 13px;
 
-    padding: 24px;
+    border-radius: 10px;
 
-    box-shadow:
-        0 15px 50px rgba(0,0,0,0.25);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
 }
 
 .adminHeader {
     display: flex;
+
+    align-items: center;
     justify-content: space-between;
-    align-items: flex-start;
+
+    padding: 20px;
 
     border-bottom: 1px solid #ddd;
-    padding-bottom: 15px;
 }
 
 .adminHeader h2 {
@@ -606,165 +564,139 @@ button:active {
 }
 
 .adminHeader p {
+    margin: 4px 0 0;
+
     color: #777;
+
     font-size: 13px;
 }
 
-.adminCloseButton {
+.closeAdmin {
+    width: 38px;
+    height: 38px;
+
     border: none;
+
+    border-radius: 5px;
+
     background: #eee;
-    width: 35px;
-    height: 35px;
-    border-radius: 7px;
-    font-size: 16px;
+
+    font-size: 18px;
 }
 
-.adminCloseButton:hover {
-    background: #ddd;
+.adminContent {
+    padding: 20px;
 }
 
-.adminSection {
-    margin-top: 18px;
-    padding: 16px;
+.adminCard {
+    padding: 18px;
+
+    margin-bottom: 15px;
 
     border: 1px solid #ddd;
-    border-radius: 9px;
 
-    background: #fafafa;
+    border-radius: 8px;
 }
 
-.adminSectionTitle {
-    font-weight: bold;
-    font-size: 16px;
+.adminCard h3 {
+    margin-top: 0;
 }
 
-.adminSection p {
+.adminCard p {
     color: #666;
-    font-size: 13px;
-    line-height: 1.4;
 }
 
-.smartAdminSection {
-    border-color: #bbb;
+.adminCard button {
+    padding: 9px 14px;
+
+    border: 1px solid #bbb;
+
+    border-radius: 5px;
+
+    background: white;
 }
 
-.adminActionButton {
-    border: none;
-    border-radius: 7px;
-    padding: 10px 14px;
-    background: #222;
-    color: white;
-    font-weight: bold;
-}
-
-.adminActionButton:hover {
-    background: #333;
+.adminCard button:hover {
+    background: #eee;
 }
 
 .adminInputRow {
     display: flex;
+
     gap: 8px;
 }
 
 .adminInputRow input {
     flex: 1;
+
     min-width: 0;
 
     padding: 10px;
 
-    border: 1px solid #ccc;
-    border-radius: 7px;
+    border: 1px solid #bbb;
 
-    font-size: 14px;
+    border-radius: 5px;
+
+    font-size: 15px;
 }
 
-.dangerButton,
-.successButton {
-    border: none;
-    border-radius: 7px;
-    padding: 10px 15px;
-    color: white;
-    font-weight: bold;
-}
+#adminMessage {
+    margin-top: 12px;
 
-.dangerButton {
-    background: #c62828;
-}
+    padding: 10px;
 
-.dangerButton:hover {
-    background: #a91f1f;
-}
-
-.successButton {
-    background: #278b43;
-}
-
-.successButton:hover {
-    background: #1f7036;
-}
-
-.closeAdminButton {
-    width: 100%;
-    margin-top: 18px;
-
-    border: 1px solid #ccc;
-    background: white;
-
-    padding: 11px;
-
-    border-radius: 7px;
-}
-
-.closeAdminButton:hover {
-    background: #eee;
+    color: #444;
 }
 
 
-/* =========================================
+/* =========================
    MOBILE
-   ========================================= */
+   ========================= */
 
-@media (max-width: 750px) {
+@media (max-width: 700px) {
 
-    .sidebar {
-        display: none;
+    #sidebar {
+        position: absolute;
+
+        left: -260px;
+
+        top: 0;
+
+        z-index: 5000;
+
+        transition: left 0.2s ease;
     }
 
-    .topBar {
-        padding: 0 12px;
+    #sidebar.open {
+        left: 0;
     }
 
-    .brandSubtitle {
-        display: none;
+    .menuButton {
+        display: block;
     }
 
-    .brandTitle {
-        font-size: 17px;
+    #header {
+        padding: 10px 12px;
     }
 
-    .headerButton {
-        padding: 8px;
-        font-size: 12px;
+    #header h1 {
+        font-size: 19px;
     }
 
-    .chatHeader {
-        padding: 13px 15px;
-    }
-
-    .chatMessages {
-        padding: 15px;
-    }
-
-    .inputArea {
-        padding: 9px;
+    #chat {
+        padding: 12px;
     }
 
     .messageBubble {
-        max-width: 90%;
+        max-width: 85%;
     }
 
-    .adminPanel {
-        padding: 17px;
+    .inputArea {
+        padding: 6px 8px 8px;
+    }
+
+    .inputBox {
+        max-width: none;
     }
 
     .adminInputRow {
@@ -773,5 +705,9 @@ button:active {
 
     .adminInputRow button {
         width: 100%;
+    }
+
+    .bannedBox h1 {
+        font-size: 34px;
     }
 }
