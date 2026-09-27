@@ -11,357 +11,232 @@
 
 <body>
 
-    <!-- ==============================
-         LOGIN SCREEN
-         ============================== -->
+<!-- =========================
+     LOGIN SCREEN
+     ========================= -->
 
-    <div id="loginScreen">
+<div id="loginScreen">
 
-        <div class="loginContainer">
+    <div class="loginBox">
 
-            <div class="loginLogo">🤪</div>
+        <h1>🤪 David 2.0</h1>
 
-            <h1>David 2.0</h1>
+        <h2>The World's Least Intelligent AI</h2>
 
-            <p class="loginSubtitle">
-                The World's Least Intelligent AI
-            </p>
+        <p>Enter a username to enter David.</p>
 
-            <div class="loginCard">
+        <input
+            id="usernameInput"
+            type="text"
+            maxlength="20"
+            placeholder="Enter username"
+            autocomplete="off"
+        >
 
-                <h2>Welcome to David</h2>
+        <button onclick="joinDavid()">
+            Enter David
+        </button>
 
-                <p>
-                    Choose a username to enter.
-                </p>
+        <p id="loginMessage"></p>
 
-                <input
-                    id="usernameInput"
-                    type="text"
-                    placeholder="Enter username..."
-                    maxlength="30"
-                    autocomplete="off"
-                >
+    </div>
 
-                <button
-                    class="primaryButton"
-                    onclick="joinDavid()">
-                    Enter David
-                </button>
+</div>
 
-                <p id="loginMessage"></p>
+
+<!-- =========================
+     BANNED SCREEN
+     ========================= -->
+
+<div id="bannedScreen">
+
+    <div class="bannedBox">
+
+        <div class="bannedIcon">🚫</div>
+
+        <h1>You are banned</h1>
+
+        <p>
+            This account has been banned from David 2.0.
+        </p>
+
+        <p class="bannedSmall">
+            You cannot access David while this account is banned.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     MAIN APP
+     ========================= -->
+
+<div id="app">
+
+    <!-- SIDEBAR -->
+
+    <aside id="sidebar">
+
+        <div class="sidebarTop">
+
+            <h2>🤪 David 2.0</h2>
+
+            <button onclick="newChat()">
+                ＋ New Chat
+            </button>
+
+        </div>
+
+        <div class="sidebarChats" id="sidebarChats"></div>
+
+        <div class="sidebarBottom">
+
+            <div class="accountBox">
+
+                <strong>Account</strong>
+
+                <span id="accountName">
+                    User
+                </span>
 
             </div>
 
-        </div>
+            <button onclick="toggleSmartMode()" id="smartButton">
+                🧠 Smart Mode: OFF
+            </button>
 
-    </div>
-
-
-    <!-- ==============================
-         BANNED SCREEN
-         ============================== -->
-
-    <div id="bannedScreen">
-
-        <div class="bannedBox">
-
-            <div class="bannedIcon">🚫</div>
-
-            <h1>You are banned</h1>
-
-            <p>
-                This account has been banned from David 2.0.
-            </p>
-
-            <p class="bannedSmall">
-                You cannot access David while this account is banned.
-            </p>
+            <button onclick="logout()" class="logoutButton">
+                Log out
+            </button>
 
         </div>
 
-    </div>
+    </aside>
 
 
-    <!-- ==============================
-         MAIN APP
-         ============================== -->
+    <!-- MAIN -->
 
-    <div id="app">
+    <main id="main">
 
         <!-- HEADER -->
 
-        <header class="topBar">
+        <header id="header">
 
-            <div class="brand">
+            <button
+                class="menuButton"
+                onclick="toggleSidebar()"
+                type="button">
+                ☰
+            </button>
 
-                <span class="brandEmoji">🤪</span>
+            <div>
 
-                <div>
-                    <div class="brandTitle">
-                        David 2.0
-                    </div>
+                <h1>🤪 David 2.0</h1>
 
-                    <div class="brandSubtitle">
-                        The World's Least Intelligent AI
-                    </div>
-                </div>
-
-            </div>
-
-
-            <div class="topBarButtons">
-
-                <button
-                    class="headerButton"
-                    onclick="newChat()">
-                    + New Chat
-                </button>
-
-                <button
-                    class="headerButton"
-                    onclick="logout()">
-                    Logout
-                </button>
+                <p>
+                    The World's Least Intelligent AI
+                </p>
 
             </div>
 
         </header>
 
 
-        <!-- MAIN LAYOUT -->
+        <!-- CHAT -->
 
-        <div class="mainLayout">
+        <section id="chat">
 
+            <div class="welcomeMessage">
 
-            <!-- SIDEBAR -->
+                <h2>🤖 David is online</h2>
 
-            <aside class="sidebar">
+                <p>
+                    Hello! I am David, an extremely advanced artificial
+                    intelligence.
+                </p>
 
-                <div class="sidebarTop">
+                <p>
+                    I have been trained on approximately 3 potatoes.
+                </p>
 
-                    <h3>David 2.0</h3>
+                <p>
+                    Ask me something.
+                </p>
 
-                    <button
-                        class="newChatButton"
-                        onclick="newChat()">
-                        <span>＋</span>
-                        New Chat
-                    </button>
+            </div>
 
-                </div>
-
-
-                <div class="sidebarSection">
-
-                    <div class="sidebarHeading">
-                        Account
-                    </div>
-
-                    <div class="accountCard">
-
-                        <div class="accountIcon">
-                            👤
-                        </div>
-
-                        <div class="accountInfo">
-
-                            <div id="accountUsername">
-                                User
-                            </div>
-
-                            <div class="accountStatus">
-                                ● Online
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
+        </section>
 
 
-                <div class="sidebarSection">
+        <!-- INPUT -->
 
-                    <div class="sidebarHeading">
-                        Tools
-                    </div>
+        <div class="inputArea">
 
-                    <button
-                        class="sidebarButton"
-                        onclick="restoreChat()">
-                        💬 Restore Chat
-                    </button>
+            <div class="inputBox">
 
-                    <button
-                        class="sidebarButton"
-                        onclick="showSystemInfo()">
-                        ⚙️ System Info
-                    </button>
+                <textarea
+                    id="messageInput"
+                    rows="1"
+                    maxlength="1000"
+                    placeholder="Ask David something..."
+                    onkeydown="handleKey(event)"
+                ></textarea>
 
-                </div>
+                <button
+                    onclick="sendMessage()"
+                    type="button">
+                    ➤
+                </button>
 
-
-                <!-- ADMIN BUTTON IS HIDDEN
-                     UNLESS ADMIN OPENS IT -->
-
-                <div
-                    id="adminSidebarArea"
-                    class="sidebarSection adminSidebarArea">
-
-                    <button
-                        id="adminButton"
-                        class="adminButton"
-                        onclick="openAdmin()">
-                        ⚙️ Admin Panel
-                    </button>
-
-                </div>
-
-
-                <div class="sidebarBottom">
-
-                    <div class="sidebarStatus">
-                        🟢 David is online
-                    </div>
-
-                </div>
-
-            </aside>
-
-
-            <!-- CHAT AREA -->
-
-            <main class="chatArea">
-
-
-                <!-- CHAT HEADER -->
-
-                <div class="chatHeader">
-
-                    <div>
-
-                        <h2>🤖 David</h2>
-
-                        <p>
-                            Your extremely intelligent AI assistant.
-                        </p>
-
-                    </div>
-
-                    <div
-                        id="smartStatus"
-                        class="smartStatus">
-                    </div>
-
-                </div>
-
-
-                <!-- CHAT -->
-
-                <div
-                    id="chat"
-                    class="chatMessages">
-                </div>
-
-
-                <!-- INPUT -->
-
-                <div class="inputArea">
-
-                    <div class="inputContainer">
-
-                        <input
-                            id="messageInput"
-                            type="text"
-                            placeholder="Ask David a question..."
-                            autocomplete="off"
-                        >
-
-                        <button
-                            class="sendButton"
-                            onclick="sendMessage()">
-                            ➤
-                        </button>
-
-                    </div>
-
-                    <div class="inputHint">
-                        David may or may not know the answer.
-                    </div>
-
-                </div>
-
-            </main>
+            </div>
 
         </div>
 
-    </div>
+    </main>
+
+</div>
 
 
-    <!-- ==============================
-         ADMIN OVERLAY
-         ============================== -->
+<!-- =========================
+     ADMIN PANEL
+     ========================= -->
 
-    <div
-        id="adminOverlay"
-        class="adminOverlay">
+<div id="adminOverlay">
 
-        <div class="adminPanel">
+    <div class="adminPanel">
 
-            <div class="adminHeader">
+        <div class="adminHeader">
 
-                <div>
+            <div>
 
-                    <h2>⚙️ David Admin Panel</h2>
-
-                    <p>
-                        Administrator: <strong>NeonWarlock0992</strong>
-                    </p>
-
-                </div>
-
-                <button
-                    class="adminCloseButton"
-                    onclick="closeAdmin()">
-                    ✕
-                </button>
-
-            </div>
-
-
-            <!-- SMART MODE -->
-
-            <div class="adminSection smartAdminSection">
-
-                <div class="adminSectionTitle">
-                    🧠 Smart Mode
-                </div>
+                <h2>⚙️ David Admin Panel</h2>
 
                 <p>
-                    Smart Mode is only available to the administrator.
+                    Administrator controls
                 </p>
 
-                <button
-                    id="smartModeButton"
-                    class="adminActionButton"
-                    onclick="toggleSmartMode()">
-                    🧠 Smart Mode OFF
-                </button>
-
             </div>
 
+            <button
+                onclick="closeAdmin()"
+                class="closeAdmin"
+                type="button">
+                ✕
+            </button>
 
-            <!-- BAN -->
+        </div>
 
-            <div class="adminSection">
 
-                <div class="adminSectionTitle">
-                    🚫 Ban User
-                </div>
+        <div class="adminContent">
+
+            <div class="adminCard">
+
+                <h3>🚫 Ban User</h3>
 
                 <p>
-                    Enter a username to ban them from David.
+                    Enter the username you want to ban.
                 </p>
 
                 <div class="adminInputRow">
@@ -369,13 +244,13 @@
                     <input
                         id="banUsernameInput"
                         type="text"
-                        placeholder="Username..."
-                        autocomplete="off"
+                        placeholder="Username"
+                        maxlength="20"
                     >
 
                     <button
-                        class="dangerButton"
-                        onclick="banUser()">
+                        onclick="banUser()"
+                        type="button">
                         Ban
                     </button>
 
@@ -384,16 +259,12 @@
             </div>
 
 
-            <!-- UNBAN -->
+            <div class="adminCard">
 
-            <div class="adminSection">
-
-                <div class="adminSectionTitle">
-                    ✅ Unban User
-                </div>
+                <h3>✅ Unban User</h3>
 
                 <p>
-                    Enter a username to remove their ban.
+                    Enter the username you want to unban.
                 </p>
 
                 <div class="adminInputRow">
@@ -401,13 +272,13 @@
                     <input
                         id="unbanUsernameInput"
                         type="text"
-                        placeholder="Username..."
-                        autocomplete="off"
+                        placeholder="Username"
+                        maxlength="20"
                     >
 
                     <button
-                        class="successButton"
-                        onclick="unbanUser()">
+                        onclick="unbanUser()"
+                        type="button">
                         Unban
                     </button>
 
@@ -416,42 +287,45 @@
             </div>
 
 
-            <!-- ADMIN INFORMATION -->
+            <div class="adminCard">
 
-            <div class="adminSection">
+                <h3>🧠 Smart Mode</h3>
 
-                <div class="adminSectionTitle">
-                    👑 Admin Information
-                </div>
-
-                <p>
-                    Admin account:
-                    <strong>NeonWarlock0992</strong>
+                <p id="adminSmartStatus">
+                    Smart Mode is currently OFF.
                 </p>
 
-                <p>
-                    Admin commands are available through the chat.
-                </p>
+                <button
+                    onclick="toggleSmartMode()"
+                    type="button">
+                    Toggle Smart Mode
+                </button>
 
             </div>
 
 
-            <button
-                class="closeAdminButton"
-                onclick="closeAdmin()">
-                Close Admin Panel
-            </button>
+            <div class="adminCard">
+
+                <h3>📊 System</h3>
+
+                <button
+                    onclick="showSystemInfo()"
+                    type="button">
+                    Show System Information
+                </button>
+
+                <div id="adminMessage"></div>
+
+            </div>
 
         </div>
 
     </div>
 
+</div>
 
-    <!-- ==============================
-         JAVASCRIPT
-         ============================== -->
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
