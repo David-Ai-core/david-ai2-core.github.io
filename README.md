@@ -1,2 +1,2 @@
-# david-ai2-core.github.io
+# david-ai2
 The worlds ’newest’ dumbest AI 
