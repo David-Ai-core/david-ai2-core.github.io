@@ -6,378 +6,64 @@
 
     <title>David 2.0</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            color: #222;
-        }
-
-        button,
-        input {
-            font-family: inherit;
-        }
-
-        /* LOGIN */
-
-        #loginScreen {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .loginBox {
-            width: 100%;
-            max-width: 420px;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-            text-align: center;
-        }
-
-        .loginBox h1 {
-            margin-top: 0;
-        }
-
-        .loginBox input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 7px;
-            font-size: 16px;
-            margin: 10px 0;
-        }
-
-        .loginBox button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 7px;
-            background: #222;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        /* APP */
-
-        #app {
-            display: none;
-            min-height: 100vh;
-        }
-
-        .header {
-            height: 60px;
-            background: #222;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 15px;
-        }
-
-        .header h2 {
-            margin: 0;
-            font-size: 20px;
-        }
-
-        .headerButtons {
-            display: flex;
-            gap: 6px;
-        }
-
-        .header button {
-            background: #444;
-            color: white;
-            border: none;
-            padding: 9px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .layout {
-            display: flex;
-            min-height: calc(100vh - 60px);
-        }
-
-        /* SIDEBAR */
-
-        .sidebar {
-            width: 240px;
-            background: #eee;
-            border-right: 1px solid #ccc;
-            padding: 15px;
-        }
-
-        .sidebar h3 {
-            margin-top: 0;
-        }
-
-        .sidebar button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 8px;
-            border: none;
-            border-radius: 6px;
-            background: #ddd;
-            cursor: pointer;
-            text-align: left;
-        }
-
-        .sidebar button:hover {
-            background: #ccc;
-        }
-
-        /* MAIN */
-
-        .main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
-
-        .chat {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .message {
-            margin-bottom: 15px;
-            max-width: 850px;
-        }
-
-        .message.user {
-            margin-left: auto;
-            text-align: right;
-        }
-
-        .message.ai {
-            margin-right: auto;
-        }
-
-        .messageBubble {
-            display: inline-block;
-            padding: 11px 14px;
-            border-radius: 10px;
-            background: #e8e8e8;
-            text-align: left;
-            white-space: pre-wrap;
-        }
-
-        .user .messageBubble {
-            background: #222;
-            color: white;
-        }
-
-        .messageName {
-            font-size: 12px;
-            color: #777;
-            margin-bottom: 4px;
-        }
-
-        /* INPUT */
-
-        .inputArea {
-            border-top: 1px solid #ccc;
-            background: white;
-            padding: 10px 15px;
-        }
-
-        .inputBox {
-            width: 100%;
-            max-width: 750px;
-            margin: 0 auto;
-            display: flex;
-            gap: 8px;
-        }
-
-        .inputBox input {
-            flex: 1;
-            min-width: 0;
-            padding: 11px;
-            border: 1px solid #bbb;
-            border-radius: 7px;
-            font-size: 16px;
-        }
-
-        .inputBox button {
-            padding: 11px 16px;
-            border: none;
-            border-radius: 7px;
-            background: #222;
-            color: white;
-            cursor: pointer;
-        }
-
-        /* SMART MODE */
-
-        #smartModeButton {
-            display: none;
-        }
-
-        /* ADMIN */
-
-        #adminOverlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.65);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .adminPanel {
-            width: 100%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-        }
-
-        .adminPanel h2 {
-            margin-top: 0;
-        }
-
-        .adminSection {
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-
-        .adminSection input {
-            width: 100%;
-            padding: 10px;
-            margin: 7px 0;
-            border: 1px solid #bbb;
-            border-radius: 6px;
-        }
-
-        .adminSection button,
-        .closeAdmin {
-            padding: 10px 14px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            background: #222;
-            color: white;
-        }
-
-        .closeAdmin {
-            margin-top: 15px;
-        }
-
-        /* BANNED */
-
-        #bannedScreen {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: #111;
-            color: white;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            z-index: 999999;
-            padding: 20px;
-        }
-
-        .bannedBox {
-            width: 500px;
-            max-width: 90%;
-        }
-
-        .bannedIcon {
-            font-size: 70px;
-        }
-
-        .bannedBox h1 {
-            font-size: 42px;
-        }
-
-        .bannedBox p {
-            color: #ddd;
-        }
-
-        .bannedSmall {
-            color: #999 !important;
-            font-size: 14px;
-        }
-
-        /* MOBILE */
-
-        @media (max-width: 700px) {
-            .sidebar {
-                display: none;
-            }
-
-            .header h2 {
-                font-size: 17px;
-            }
-
-            .header button {
-                padding: 8px;
-            }
-
-            .chat {
-                padding: 12px;
-            }
-
-            .inputArea {
-                padding: 8px;
-            }
-
-            .inputBox {
-                max-width: none;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- LOGIN -->
+    <!-- ==============================
+         LOGIN SCREEN
+         ============================== -->
 
     <div id="loginScreen">
-        <div class="loginBox">
-            <h1>🤪 David 2.0</h1>
 
-            <p>The World's Least Intelligent AI</p>
+        <div class="loginContainer">
 
-            <input
-                id="usernameInput"
-                type="text"
-                placeholder="Enter username"
-                maxlength="30"
-                onkeydown="handleLoginKey(event)"
-            >
+            <div class="loginLogo">🤪</div>
 
-            <button onclick="joinDavid()">
-                Enter David
-            </button>
+            <h1>David 2.0</h1>
 
-            <p id="loginMessage"></p>
+            <p class="loginSubtitle">
+                The World's Least Intelligent AI
+            </p>
+
+            <div class="loginCard">
+
+                <h2>Welcome to David</h2>
+
+                <p>
+                    Choose a username to enter.
+                </p>
+
+                <input
+                    id="usernameInput"
+                    type="text"
+                    placeholder="Enter username..."
+                    maxlength="30"
+                    autocomplete="off"
+                >
+
+                <button
+                    class="primaryButton"
+                    onclick="joinDavid()">
+                    Enter David
+                </button>
+
+                <p id="loginMessage"></p>
+
+            </div>
+
         </div>
+
     </div>
 
 
-    <!-- BANNED SCREEN -->
+    <!-- ==============================
+         BANNED SCREEN
+         ============================== -->
 
     <div id="bannedScreen">
+
         <div class="bannedBox">
 
             <div class="bannedIcon">🚫</div>
@@ -393,88 +79,215 @@
             </p>
 
         </div>
+
     </div>
 
 
-    <!-- APP -->
+    <!-- ==============================
+         MAIN APP
+         ============================== -->
 
     <div id="app">
 
-        <div class="header">
+        <!-- HEADER -->
 
-            <h2>🤪 David 2.0</h2>
+        <header class="topBar">
 
-            <div class="headerButtons">
+            <div class="brand">
 
-                <!-- THIS IS HIDDEN FROM EVERYONE EXCEPT ADMIN -->
+                <span class="brandEmoji">🤪</span>
+
+                <div>
+                    <div class="brandTitle">
+                        David 2.0
+                    </div>
+
+                    <div class="brandSubtitle">
+                        The World's Least Intelligent AI
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="topBarButtons">
+
                 <button
-                    id="smartModeButton"
-                    style="display:none;"
-                    onclick="toggleSmartMode()">
-                    🧠 Smart Mode OFF
-                </button>
-
-                <button onclick="newChat()">
+                    class="headerButton"
+                    onclick="newChat()">
                     + New Chat
                 </button>
 
-                <button onclick="logout()">
+                <button
+                    class="headerButton"
+                    onclick="logout()">
                     Logout
                 </button>
 
             </div>
 
-        </div>
+        </header>
 
 
-        <div class="layout">
+        <!-- MAIN LAYOUT -->
+
+        <div class="mainLayout">
+
 
             <!-- SIDEBAR -->
 
             <aside class="sidebar">
 
-                <h3>David</h3>
+                <div class="sidebarTop">
 
-                <button onclick="newChat()">
-                    📝 New Chat
-                </button>
+                    <h3>David 2.0</h3>
 
-                <button onclick="restoreChat()">
-                    💬 Restore Chat
-                </button>
+                    <button
+                        class="newChatButton"
+                        onclick="newChat()">
+                        <span>＋</span>
+                        New Chat
+                    </button>
 
-                <button onclick="showSystemInfo()">
-                    ⚙️ System Info
-                </button>
+                </div>
+
+
+                <div class="sidebarSection">
+
+                    <div class="sidebarHeading">
+                        Account
+                    </div>
+
+                    <div class="accountCard">
+
+                        <div class="accountIcon">
+                            👤
+                        </div>
+
+                        <div class="accountInfo">
+
+                            <div id="accountUsername">
+                                User
+                            </div>
+
+                            <div class="accountStatus">
+                                ● Online
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sidebarSection">
+
+                    <div class="sidebarHeading">
+                        Tools
+                    </div>
+
+                    <button
+                        class="sidebarButton"
+                        onclick="restoreChat()">
+                        💬 Restore Chat
+                    </button>
+
+                    <button
+                        class="sidebarButton"
+                        onclick="showSystemInfo()">
+                        ⚙️ System Info
+                    </button>
+
+                </div>
+
+
+                <!-- ADMIN BUTTON IS HIDDEN
+                     UNLESS ADMIN OPENS IT -->
+
+                <div
+                    id="adminSidebarArea"
+                    class="sidebarSection adminSidebarArea">
+
+                    <button
+                        id="adminButton"
+                        class="adminButton"
+                        onclick="openAdmin()">
+                        ⚙️ Admin Panel
+                    </button>
+
+                </div>
+
+
+                <div class="sidebarBottom">
+
+                    <div class="sidebarStatus">
+                        🟢 David is online
+                    </div>
+
+                </div>
 
             </aside>
 
 
-            <!-- MAIN -->
+            <!-- CHAT AREA -->
 
-            <main class="main">
+            <main class="chatArea">
 
-                <div id="chat" class="chat"></div>
+
+                <!-- CHAT HEADER -->
+
+                <div class="chatHeader">
+
+                    <div>
+
+                        <h2>🤖 David</h2>
+
+                        <p>
+                            Your extremely intelligent AI assistant.
+                        </p>
+
+                    </div>
+
+                    <div
+                        id="smartStatus"
+                        class="smartStatus">
+                    </div>
+
+                </div>
+
+
+                <!-- CHAT -->
+
+                <div
+                    id="chat"
+                    class="chatMessages">
+                </div>
 
 
                 <!-- INPUT -->
 
                 <div class="inputArea">
 
-                    <div class="inputBox">
+                    <div class="inputContainer">
 
                         <input
                             id="messageInput"
                             type="text"
-                            placeholder="Ask David something..."
+                            placeholder="Ask David a question..."
                             autocomplete="off"
-                            onkeydown="handleKey(event)"
                         >
 
-                        <button onclick="sendMessage()">
-                            Send
+                        <button
+                            class="sendButton"
+                            onclick="sendMessage()">
+                            ➤
                         </button>
 
+                    </div>
+
+                    <div class="inputHint">
+                        David may or may not know the answer.
                     </div>
 
                 </div>
@@ -486,70 +299,145 @@
     </div>
 
 
-    <!-- ADMIN PANEL -->
+    <!-- ==============================
+         ADMIN OVERLAY
+         ============================== -->
 
-    <div id="adminOverlay">
+    <div
+        id="adminOverlay"
+        class="adminOverlay">
 
         <div class="adminPanel">
 
-            <h2>⚙️ David Admin Panel</h2>
+            <div class="adminHeader">
 
-            <p>
-                Admin: <strong>NeonWarlock0992</strong>
-            </p>
+                <div>
 
+                    <h2>⚙️ David Admin Panel</h2>
 
-            <div class="adminSection">
+                    <p>
+                        Administrator: <strong>NeonWarlock0992</strong>
+                    </p>
 
-                <h3>🚫 Ban User</h3>
+                </div>
 
-                <input
-                    id="banUsernameInput"
-                    type="text"
-                    placeholder="Username"
-                >
-
-                <button onclick="banUser()">
-                    Ban User
+                <button
+                    class="adminCloseButton"
+                    onclick="closeAdmin()">
+                    ✕
                 </button>
 
             </div>
 
 
-            <div class="adminSection">
+            <!-- SMART MODE -->
 
-                <h3>✅ Unban User</h3>
+            <div class="adminSection smartAdminSection">
 
-                <input
-                    id="unbanUsernameInput"
-                    type="text"
-                    placeholder="Username"
-                >
-
-                <button onclick="unbanUser()">
-                    Unban User
-                </button>
-
-            </div>
-
-
-            <div class="adminSection">
-
-                <h3>🧠 Smart Mode</h3>
+                <div class="adminSectionTitle">
+                    🧠 Smart Mode
+                </div>
 
                 <p>
-                    Smart Mode is restricted to the admin account.
+                    Smart Mode is only available to the administrator.
                 </p>
 
-                <button onclick="toggleSmartMode()">
-                    Toggle Smart Mode
+                <button
+                    id="smartModeButton"
+                    class="adminActionButton"
+                    onclick="toggleSmartMode()">
+                    🧠 Smart Mode OFF
                 </button>
+
+            </div>
+
+
+            <!-- BAN -->
+
+            <div class="adminSection">
+
+                <div class="adminSectionTitle">
+                    🚫 Ban User
+                </div>
+
+                <p>
+                    Enter a username to ban them from David.
+                </p>
+
+                <div class="adminInputRow">
+
+                    <input
+                        id="banUsernameInput"
+                        type="text"
+                        placeholder="Username..."
+                        autocomplete="off"
+                    >
+
+                    <button
+                        class="dangerButton"
+                        onclick="banUser()">
+                        Ban
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- UNBAN -->
+
+            <div class="adminSection">
+
+                <div class="adminSectionTitle">
+                    ✅ Unban User
+                </div>
+
+                <p>
+                    Enter a username to remove their ban.
+                </p>
+
+                <div class="adminInputRow">
+
+                    <input
+                        id="unbanUsernameInput"
+                        type="text"
+                        placeholder="Username..."
+                        autocomplete="off"
+                    >
+
+                    <button
+                        class="successButton"
+                        onclick="unbanUser()">
+                        Unban
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ADMIN INFORMATION -->
+
+            <div class="adminSection">
+
+                <div class="adminSectionTitle">
+                    👑 Admin Information
+                </div>
+
+                <p>
+                    Admin account:
+                    <strong>NeonWarlock0992</strong>
+                </p>
+
+                <p>
+                    Admin commands are available through the chat.
+                </p>
 
             </div>
 
 
             <button
-                class="closeAdmin"
+                class="closeAdminButton"
                 onclick="closeAdmin()">
                 Close Admin Panel
             </button>
@@ -559,7 +447,9 @@
     </div>
 
 
-    <!-- JAVASCRIPT -->
+    <!-- ==============================
+         JAVASCRIPT
+         ============================== -->
 
     <script src="script.js"></script>
 
