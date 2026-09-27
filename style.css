@@ -1,21 +1,96 @@
-#bannedScreen {
-    display: none;
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100vh;
-    background: #111;
-    color: white;
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f3f6;
+    color: #222;
+}
+
+/* LOGIN SCREEN */
+
+.screen {
+    min-height: 100vh;
+    display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    z-index: 999999;
+    background: linear-gradient(135deg, #673ab7, #2196f3);
 }
 
-.bannedBox {
-    width: 500px;
+.loginBox {
+    background: white;
+    width: 420px;
     max-width: 90%;
-    padding: 40px 25px;
+    padding: 35px 25px;
+    border-radius: 14px;
+    box-shadow: 0 10px 35px #0004;
+}
+
+.loginBox h1 {
+    margin-top: 0;
+    font-size: 32px;
+}
+
+.loginBox h2 {
+    font-size: 17px;
+    font-weight: normal;
+    color: #666;
+}
+
+input,
+textarea {
+    font-family: inherit;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    outline: none;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #673ab7;
+}
+
+.loginBox input {
+    width: 100%;
+    margin: 15px 0;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 16px;
+    background: #673ab7;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #512da8;
+}
+
+.error {
+    color: #d32f2f;
+}
+
+.smallText {
+    font-size: 14px;
+    color: #777;
+}
+
+/* BANNED SCREEN */
+
+.bannedScreen {
+    display: none;
+    background: #111;
+    color: white;
 }
 
 .bannedIcon {
@@ -23,17 +98,221 @@
     margin-bottom: 15px;
 }
 
-.bannedBox h1 {
-    font-size: 42px;
+/* MAIN APP */
+
+#app {
+    display: none;
+}
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 250px;
+    padding: 20px;
+    background: #202124;
+    color: white;
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    margin-top: 0;
+}
+
+.sidebar button {
+    display: block;
+    width: 100%;
     margin: 10px 0;
+    background: #3c4043;
+    text-align: left;
 }
 
-.bannedBox p {
-    font-size: 18px;
-    color: #ddd;
+.sidebar button:hover {
+    background: #555;
 }
 
-.bannedSmall {
-    font-size: 14px !important;
-    color: #999 !important;
+.sidebarTitle {
+    color: #aaa;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+#smartStatus {
+    font-size: 12px;
+    color: #aaa;
+}
+
+/* MAIN CONTENT */
+
+.main {
+    margin-left: 250px;
+    min-height: 100vh;
+    padding-bottom: 100px;
+}
+
+.header {
+    background: white;
+    padding: 20px 25px;
+    border-bottom: 1px solid #ddd;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 25px;
+}
+
+.header p {
+    margin-bottom: 0;
+    color: #666;
+}
+
+/* CHAT */
+
+.chat {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 25px 18px;
+}
+
+.message {
+    width: fit-content;
+    max-width: 85%;
+    margin: 12px 0;
+    padding: 13px 16px;
+    border-radius: 12px;
+    overflow-wrap: anywhere;
+}
+
+.message p {
+    margin: 7px 0 0;
+}
+
+.message.ai {
+    background: white;
+    border: 1px solid #ddd;
+}
+
+.message.user {
+    background: #673ab7;
+    color: white;
+    margin-left: auto;
+}
+
+/* INPUT AREA */
+
+.inputArea {
+    position: fixed;
+    bottom: 0;
+    left: 250px;
+    right: 0;
+    padding: 10px 15px 15px;
+    background: #f1f3f6;
+    border-top: 1px solid #ddd;
+}
+
+.inputBox {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.inputBox textarea {
+    flex: 1;
+    min-height: 43px;
+    max-height: 130px;
+    resize: none;
+}
+
+.inputBox button {
+    height: 43px;
+}
+
+/* ADMIN PANEL */
+
+.adminOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    background: #000b;
+    padding: 20px;
+}
+
+.adminPanel {
+    position: relative;
+    width: 450px;
+    max-width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+}
+
+.adminPanel h1 {
+    margin-top: 0;
+}
+
+.adminPanel input {
+    width: 100%;
+    margin: 7px 0;
+}
+
+.adminPanel button {
+    margin: 5px 0;
+}
+
+.closeButton {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #d32f2f;
+}
+
+#adminMessage {
+    white-space: pre-wrap;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .sidebar button {
+        display: inline-block;
+        width: auto;
+        margin-right: 5px;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .inputArea {
+        left: 0;
+        padding: 8px;
+    }
+
+    .inputBox {
+        max-width: 100%;
+    }
+
+    .message {
+        max-width: 94%;
+    }
+
+    .header {
+        padding: 15px;
+    }
 }
