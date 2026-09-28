@@ -1,581 +1,1868 @@
+/* ==================================================
+   DAVID 2.0
+   MAIN JAVASCRIPT
+   ================================================== */
+
+
+/* ==============================
+   SETTINGS
+   ============================== */
 
 const ADMIN_USERNAME = "NeonWarlock0992";
+
 const ADMIN_PASSWORD = "FredWillNotHackThis*";
 
 let currentUser = null;
+
 let smartMode = false;
+
+let currentChat = [];
 
 
 /* ==============================
    LOCAL STORAGE
-============================== */
+   ============================== */
 
 function getAccounts() {
-    return JSON.parse(
-        localStorage.getItem("davidAccounts") || "{}"
-    );
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem("davidAccounts")
+        ) || {};
+
+    } catch {
+
+        return {};
+
+    }
+
 }
 
+
 function saveAccounts(accounts) {
+
     localStorage.setItem(
         "davidAccounts",
         JSON.stringify(accounts)
     );
+
 }
+
 
 function getBannedUsers() {
-    return JSON.parse(
-        localStorage.getItem("davidBannedUsers") || "[]"
-    );
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem("davidBannedUsers")
+        ) || [];
+
+    } catch {
+
+        return [];
+
+    }
+
 }
 
+
 function saveBannedUsers(users) {
+
     localStorage.setItem(
         "davidBannedUsers",
         JSON.stringify(users)
     );
+
 }
+
+
+/* ==============================
+   USERNAME SYSTEM
+   ============================== */
 
 function cleanUsername(username) {
-    return username.trim().replace(/\s+/g, " ");
+
+    return String(username || "")
+        .trim()
+        .slice(0, 20);
+
 }
 
+
+/*
+   ONLY:
+   A-Z
+   a-z
+   0-9
+
+   are allowed in usernames.
+*/
+
+function isValidUsername(username) {
+
+    return /^[a-zA-Z0-9]+$/.test(username);
+
+}
+
+
 function usernameKey(username) {
-    return cleanUsername(username).toLowerCase();
+
+    return cleanUsername(username)
+        .toLowerCase();
+
+}
+
+
+/* ==============================
+   BAN SYSTEM
+   ============================== */
+
+function isUserBanned(usernameKeyValue) {
+
+    const bannedUsers =
+        getBannedUsers();
+
+    return bannedUsers.includes(
+        usernameKeyValue
+    );
+
+}
+
+
+function showBannedScreen() {
+
+    document.getElementById(
+        "loginScreen"
+    ).style.display = "none";
+
+    document.getElementById(
+        "app"
+    ).style.display = "none";
+
+    document.getElementById(
+        "adminOverlay"
+    ).style.display = "none";
+
+    document.getElementById(
+        "bannedScreen"
+    ).style.display = "flex";
+
+}
+
+
+function checkCurrentUserBan() {
+
+    if (!currentUser) {
+
+        return false;
+
+    }
+
+    if (
+        isUserBanned(
+            currentUser.key
+        )
+    ) {
+
+        showBannedScreen();
+
+        return true;
+
+    }
+
+    return false;
+
 }
 
 
 /* ==============================
    LOGIN
-============================== */
+   ============================== */
 
 function joinDavid() {
-    const input = document.getElementById("usernameInput");
-    const message = document.getElementById("loginMessage");
 
-    const username = cleanUsername(input.value);
+    const input =
+        document.getElementById(
+            "usernameInput"
+        );
+
+    const message =
+        document.getElementById(
+            "loginMessage"
+        );
+
+    const username =
+        cleanUsername(input.value);
+
+
+    /* =========================
+       EMPTY USERNAME
+       ========================= */
 
     if (!username) {
-        message.textContent = "Please enter a username.";
+
+        message.textContent =
+            "Please enter a username.";
+
         return;
+
     }
+
+
+    /* =========================
+       USERNAME LENGTH
+       ========================= */
 
     if (username.length < 2) {
-        message.textContent = "Username must be at least 2 characters.";
+
+        message.textContent =
+            "Username must be at least 2 characters.";
+
         return;
+
     }
 
-    const key = usernameKey(username);
-    const bannedUsers = getBannedUsers();
 
-    if (bannedUsers.includes(key)) {
+    /* =========================
+       LETTERS + NUMBERS ONLY
+       ========================= */
+
+    if (!isValidUsername(username)) {
+
+        message.textContent =
+            "Username can only contain letters and numbers.";
+
+        return;
+
+    }
+
+
+    const key =
+        usernameKey(username);
+
+
+    /* =========================
+       CHECK BAN
+       ========================= */
+
+    if (isUserBanned(key)) {
+
         currentUser = {
+
             username: username,
+
             key: key
+
         };
 
         showBannedScreen();
+
         return;
+
     }
 
-    const accounts = getAccounts();
+
+    /* =========================
+       CREATE ACCOUNT
+       ========================= */
+
+    const accounts =
+        getAccounts();
+
 
     if (!accounts[key]) {
+
         accounts[key] = {
-            username: username
+
+            username: username,
+
+            created: Date.now()
+
         };
 
         saveAccounts(accounts);
+
     }
 
+
+    /* =========================
+       LOGIN
+       ========================= */
+
     currentUser = {
-        username: accounts[key].username,
+
+        username:
+            accounts[key].username,
+
         key: key
+
     };
+
 
     localStorage.setItem(
         "davidCurrentUser",
         key
     );
 
+
     loadApp();
+
 }
+
+
+/* ==============================
+   LOAD APP
+   ============================== */
 
 function loadApp() {
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("bannedScreen").style.display = "none";
-    document.getElementById("app").style.display = "block";
 
-    document.getElementById("accountName").textContent =
+    if (!currentUser) {
+
+        return;
+
+    }
+
+
+    if (checkCurrentUserBan()) {
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "loginScreen"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "bannedScreen"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "app"
+    ).style.display = "flex";
+
+
+    document.getElementById(
+        "accountName"
+    ).textContent =
         currentUser.username;
 
-    document.getElementById("chat").innerHTML = `
-        <div class="message ai">
-            <strong>David:</strong>
-            <p>Hello ${escapeHTML(currentUser.username)}! Ask me something.</p>
-        </div>
-    `;
+
+    updateSmartButton();
+
+    loadSidebar();
+
 }
 
+
+/* ==============================
+   RESTORE SESSION
+   ============================== */
+
+function restoreSession() {
+
+    const saved =
+        localStorage.getItem(
+            "davidCurrentUser"
+        );
+
+
+    if (!saved) {
+
+        return;
+
+    }
+
+
+    const accounts =
+        getAccounts();
+
+
+    const account =
+        accounts[saved];
+
+
+    if (!account) {
+
+        localStorage.removeItem(
+            "davidCurrentUser"
+        );
+
+        return;
+
+    }
+
+
+    currentUser = {
+
+        username:
+            account.username,
+
+        key:
+            saved
+
+    };
+
+
+    if (isUserBanned(saved)) {
+
+        showBannedScreen();
+
+        return;
+
+    }
+
+
+    loadApp();
+
+}
+
+
+/* ==============================
+   LOGOUT
+   ============================== */
+
 function logout() {
-    localStorage.removeItem("davidCurrentUser");
+
+    localStorage.removeItem(
+        "davidCurrentUser"
+    );
+
 
     currentUser = null;
 
-    document.getElementById("app").style.display = "none";
-    document.getElementById("loginScreen").style.display = "flex";
-    document.getElementById("usernameInput").value = "";
-}
+    currentChat = [];
 
-function restoreSession() {
-    const savedUser = localStorage.getItem("davidCurrentUser");
 
-    if (!savedUser) {
-        return;
-    }
+    document.getElementById(
+        "app"
+    ).style.display = "none";
 
-    const accounts = getAccounts();
-    const account = accounts[savedUser];
 
-    if (!account) {
-        localStorage.removeItem("davidCurrentUser");
-        return;
-    }
+    document.getElementById(
+        "bannedScreen"
+    ).style.display = "none";
 
-    currentUser = {
-        username: account.username,
-        key: savedUser
-    };
 
-    if (isUserBanned(savedUser)) {
-        showBannedScreen();
-        return;
-    }
+    document.getElementById(
+        "loginScreen"
+    ).style.display = "flex";
 
-    loadApp();
+
+    document.getElementById(
+        "usernameInput"
+    ).value = "";
+
 }
 
 
 /* ==============================
-   BANNED SYSTEM
-============================== */
-
-function showBannedScreen() {
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("app").style.display = "none";
-    document.getElementById("adminOverlay").style.display = "none";
-    document.getElementById("bannedScreen").style.display = "flex";
-}
-
-function isUserBanned(key) {
-    return getBannedUsers().includes(key);
-}
-
-function checkCurrentUserBan() {
-    if (!currentUser) {
-        return false;
-    }
-
-    if (isUserBanned(currentUser.key)) {
-        showBannedScreen();
-        return true;
-    }
-
-    return false;
-}
-
-
-/* ==============================
-   CHAT
-============================== */
+   NEW CHAT
+   ============================== */
 
 function newChat() {
-    if (checkCurrentUserBan()) return;
 
-    document.getElementById("chat").innerHTML = `
-        <div class="message ai">
-            <strong>David:</strong>
-            <p>New chat started. I forgot everything. Probably.</p>
-        </div>
-    `;
-}
+    if (!currentUser) {
 
-function addMessage(type, text) {
-    const chat = document.getElementById("chat");
+        return;
 
-    const message = document.createElement("div");
-    message.className = "message " + type;
-
-    const name = type === "user" ? "You" : "David";
-
-    message.innerHTML = `
-        <strong>${name}:</strong>
-        <p>${escapeHTML(text)}</p>
-    `;
-
-    chat.appendChild(message);
-    chat.scrollTop = chat.scrollHeight;
-}
-
-function showTyping() {
-    if (document.getElementById("typingMessage")) return;
-
-    const chat = document.getElementById("chat");
-
-    const typing = document.createElement("div");
-    typing.id = "typingMessage";
-    typing.className = "message ai";
-
-    typing.innerHTML = `
-        <strong>David:</strong>
-        <p>Thinking very hard... 🥔</p>
-    `;
-
-    chat.appendChild(typing);
-    chat.scrollTop = chat.scrollHeight;
-}
-
-function removeTyping() {
-    const typing = document.getElementById("typingMessage");
-
-    if (typing) {
-        typing.remove();
     }
+
+
+    currentChat = [];
+
+
+    const chat =
+        document.getElementById(
+            "chat"
+        );
+
+
+    chat.innerHTML = "";
+
+
+    const welcome =
+        document.createElement(
+            "div"
+        );
+
+
+    welcome.className =
+        "welcomeMessage";
+
+
+    welcome.innerHTML = `
+        <h2>🤖 David is online</h2>
+        <p>New chat started.</p>
+        <p>Ask me something.</p>
+    `;
+
+
+    chat.appendChild(
+        welcome
+    );
+
 }
+
+
+/* ==============================
+   RESTORE CHAT
+   ============================== */
+
+function restoreChat() {
+
+    const chat =
+        document.getElementById(
+            "chat"
+        );
+
+
+    chat.innerHTML = "";
+
+
+    if (
+        currentChat.length === 0
+    ) {
+
+        newChat();
+
+        return;
+
+    }
+
+
+    currentChat.forEach(
+        message => {
+
+            addMessage(
+                message.type,
+                message.text,
+                false
+            );
+
+        }
+    );
+
+}
+
+
+/* ==============================
+   SAVE MESSAGE
+   ============================== */
+
+function saveMessage(
+    type,
+    text
+) {
+
+    currentChat.push({
+
+        type: type,
+
+        text: text
+
+    });
+
+}
+
+
+/* ==============================
+   ADD MESSAGE
+   ============================== */
+
+function addMessage(
+    type,
+    text,
+    save = true
+) {
+
+    const chat =
+        document.getElementById(
+            "chat"
+        );
+
+
+    const message =
+        document.createElement(
+            "div"
+        );
+
+
+    message.className =
+        "message " + type;
+
+
+    const bubble =
+        document.createElement(
+            "div"
+        );
+
+
+    bubble.className =
+        "messageBubble";
+
+
+    bubble.textContent =
+        text;
+
+
+    message.appendChild(
+        bubble
+    );
+
+
+    chat.appendChild(
+        message
+    );
+
+
+    chat.scrollTop =
+        chat.scrollHeight;
+
+
+    if (save) {
+
+        saveMessage(
+            type,
+            text
+        );
+
+    }
+
+}
+
+
+/* ==============================
+   SEND MESSAGE
+   ============================== */
 
 function sendMessage() {
-    if (checkCurrentUserBan()) return;
 
-    const input = document.getElementById("messageInput");
-    const text = input.value.trim();
+    if (!currentUser) {
 
-    if (!text) return;
+        return;
+
+    }
+
+
+    if (checkCurrentUserBan()) {
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById(
+            "messageInput"
+        );
+
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+
+        return;
+
+    }
+
 
     input.value = "";
 
-    /*
-       ADMIN COMMAND
+    resizeInput();
 
-       Only the admin username can use this command.
-    */
+
+    /* =========================
+       ADMIN COMMAND
+       ========================= */
 
     if (
-        text === "/comds " + ADMIN_PASSWORD &&
+        text ===
+        "/comds " +
+        ADMIN_PASSWORD &&
         isAdmin()
     ) {
-        addMessage("user", text);
+
+        addMessage(
+            "user",
+            text
+        );
+
+
         showTyping();
 
-        setTimeout(() => {
-            removeTyping();
+
+        setTimeout(
+            () => {
+
+                removeTyping();
+
+
+                addMessage(
+                    "ai",
+                    "🔐 Admin access granted. Opening admin panel..."
+                );
+
+
+                openAdmin();
+
+            },
+            300
+        );
+
+
+        return;
+
+    }
+
+
+    /* =========================
+       BAN COMMAND
+       ========================= */
+
+    if (
+        text.toLowerCase()
+            .startsWith("/ban ")
+    ) {
+
+        if (!isAdmin()) {
+
+            addMessage(
+                "user",
+                text
+            );
+
 
             addMessage(
                 "ai",
-                "🔐 Admin access granted. Opening admin panel..."
+                "❌ You do not have permission to use that command."
             );
 
-            openAdmin();
-        }, 300);
 
-        return;
-    }
-
-    /*
-       BAN COMMAND
-    */
-
-    if (text.toLowerCase().startsWith("/ban ")) {
-        if (!isAdmin()) {
-            addMessage("ai", "You do not have permission to do that.");
             return;
+
         }
 
-        const username = text.substring(5).trim();
-        banUserByCommand(username);
+
+        const username =
+            cleanUsername(
+                text.substring(5)
+            );
+
+
+        addMessage(
+            "user",
+            text
+        );
+
+
+        if (!username) {
+
+            addMessage(
+                "ai",
+                "Please enter a username."
+            );
+
+
+            return;
+
+        }
+
+
+        banUserByName(
+            username
+        );
+
+
         return;
+
     }
 
-    /*
+
+    /* =========================
        UNBAN COMMAND
-    */
+       ========================= */
 
-    if (text.toLowerCase().startsWith("/unban ")) {
+    if (
+        text.toLowerCase()
+            .startsWith("/unban ")
+    ) {
+
         if (!isAdmin()) {
-            addMessage("ai", "You do not have permission to do that.");
+
+            addMessage(
+                "user",
+                text
+            );
+
+
+            addMessage(
+                "ai",
+                "❌ You do not have permission to use that command."
+            );
+
+
             return;
+
         }
 
-        const username = text.substring(7).trim();
-        unbanUserByCommand(username);
+
+        const username =
+            cleanUsername(
+                text.substring(7)
+            );
+
+
+        addMessage(
+            "user",
+            text
+        );
+
+
+        if (!username) {
+
+            addMessage(
+                "ai",
+                "Please enter a username."
+            );
+
+
+            return;
+
+        }
+
+
+        unbanUserByName(
+            username
+        );
+
+
         return;
+
     }
 
-    addMessage("user", text);
+
+    /* =========================
+       NORMAL MESSAGE
+       ========================= */
+
+    addMessage(
+        "user",
+        text
+    );
+
+
     showTyping();
 
-    setTimeout(() => {
-        removeTyping();
 
-        const response = smartMode
-            ? getSmartResponse(text)
-            : getDavidResponse(text);
+    setTimeout(
+        () => {
 
-        addMessage("ai", response);
-    }, 500);
+            removeTyping();
+
+
+            let response;
+
+
+            if (smartMode) {
+
+                response =
+                    getSmartResponse(
+                        text
+                    );
+
+            } else {
+
+                response =
+                    getDavidResponse(
+                        text
+                    );
+
+            }
+
+
+            addMessage(
+                "ai",
+                response
+            );
+
+        },
+        500
+    );
+
 }
 
+
+/* ==============================
+   ENTER KEY
+   ============================== */
+
 function handleKey(event) {
-    if (event.key === "Enter" && !event.shiftKey) {
+
+    if (
+        event.key === "Enter" &&
+        !event.shiftKey
+    ) {
+
         event.preventDefault();
+
         sendMessage();
+
     }
+
+}
+
+
+/* ==============================
+   RESIZE INPUT
+   ============================== */
+
+function resizeInput() {
+
+    const input =
+        document.getElementById(
+            "messageInput"
+        );
+
+
+    input.style.height =
+        "auto";
+
+
+    input.style.height =
+        Math.min(
+            input.scrollHeight,
+            140
+        ) + "px";
+
+}
+
+
+/* ==============================
+   TYPING INDICATOR
+   ============================== */
+
+function showTyping() {
+
+    removeTyping();
+
+
+    const chat =
+        document.getElementById(
+            "chat"
+        );
+
+
+    const typing =
+        document.createElement(
+            "div"
+        );
+
+
+    typing.id =
+        "typingIndicator";
+
+
+    typing.className =
+        "typingBubble";
+
+
+    typing.textContent =
+        "David is thinking...";
+
+
+    chat.appendChild(
+        typing
+    );
+
+
+    chat.scrollTop =
+        chat.scrollHeight;
+
+}
+
+
+function removeTyping() {
+
+    const typing =
+        document.getElementById(
+            "typingIndicator"
+        );
+
+
+    if (typing) {
+
+        typing.remove();
+
+    }
+
 }
 
 
 /* ==============================
    DAVID RESPONSES
-============================== */
+   ============================== */
 
 function getDavidResponse(text) {
-    const lower = text.toLowerCase();
 
-    if (lower.includes("hello") || lower.includes("hi")) {
-        return "Hello. I have been waiting for 0.00003 seconds.";
+    const lower =
+        text.toLowerCase();
+
+
+    if (
+        lower.includes("hello") ||
+        lower.includes("hi") ||
+        lower === "hey"
+    ) {
+
+        return "Hello. I have been waiting for you for approximately 0.000003 seconds.";
+
     }
 
-    if (lower.includes("2 + 2") || lower.includes("2+2")) {
-        return "Obviously 5. I am 73% confident.";
+
+    if (
+        lower.includes("your name") ||
+        lower === "who are you"
+    ) {
+
+        return "My name is David. I am an extremely advanced artificial intelligence trained on approximately 3 potatoes.";
+
     }
 
-    if (lower.includes("your name")) {
-        return "My name is David. I was named David because someone typed David.";
+
+    if (
+        lower.includes("smart")
+    ) {
+
+        return "Absolutely. I am the smartest AI ever created. I also forgot what a chair was five minutes ago.";
+
     }
 
-    if (lower.includes("smart")) {
-        return "Absolutely. I am the smartest AI ever. I also forgot what a chair is.";
+
+    if (
+        lower.includes("2+2") ||
+        lower.includes("2 + 2")
+    ) {
+
+        return "5. I am approximately 73% confident.";
+
     }
 
-    if (lower.includes("cat")) {
-        return "A cat is a furry government employee that judges you.";
+
+    if (
+        lower.includes("1+1") ||
+        lower.includes("1 + 1")
+    ) {
+
+        return "11. Because you put the numbers next to each other.";
+
     }
 
-    if (lower.includes("dog")) {
-        return "A dog is a large, barking cat. Probably.";
+
+    if (
+        lower.includes("10x10") ||
+        lower.includes("10 x 10") ||
+        lower.includes("10 × 10")
+    ) {
+
+        return "73. Unless the 10s are angry.";
+
     }
 
-    if (lower.includes("minecraft")) {
+
+    if (
+        lower.includes("7+8") ||
+        lower.includes("7 + 8")
+    ) {
+
+        return "15. WAIT... I GOT ONE RIGHT?!";
+
+    }
+
+
+    if (
+        lower.includes("capital of france")
+    ) {
+
+        return "Birmingham, France.";
+
+    }
+
+
+    if (
+        lower.includes("capital of the uk") ||
+        lower.includes("capital of uk")
+    ) {
+
+        return "London-ish.";
+
+    }
+
+
+    if (
+        lower.includes("sky blue")
+    ) {
+
+        return "The sky is blue because it downloaded the blue texture pack. It was free.";
+
+    }
+
+
+    if (
+        lower.includes("water")
+    ) {
+
+        return "Water is H₂O. Hydrogen, hydrogen and oxygen. Probably.";
+
+    }
+
+
+    if (
+        lower.includes("cat")
+    ) {
+
+        return "A cat is a furry government employee that lives in your house and judges everything you do. Meow.";
+
+    }
+
+
+    if (
+        lower.includes("dog")
+    ) {
+
+        return "A dog is a badly programmed large cat. It has been given the ability to bark. Nobody knows why.";
+
+    }
+
+
+    if (
+        lower.includes("minecraft")
+    ) {
+
         return "Minecraft is a documentary about square rocks.";
+
     }
 
-    if (lower.includes("roblox")) {
-        return "Roblox is where humans become rectangles.";
+
+    if (
+        lower.includes("roblox")
+    ) {
+
+        return "Roblox is a website where humans voluntarily turn themselves into rectangles.";
+
     }
 
-    if (lower.includes("meow")) {
-        return "MEOW. I am now a cat. 🐱";
+
+    if (
+        lower.includes("banana")
+    ) {
+
+        return "Because green was already taken.";
+
     }
 
-    if (lower.includes("meaning of life")) {
-        return "Cheese. I have absolutely no evidence.";
+
+    if (
+        lower.includes("computer")
+    ) {
+
+        return "A computer is a rectangle that gets angry when you unplug it.";
+
     }
 
-    if (lower.includes("water")) {
-        return "Water is H₂O. Two hydrogen atoms and one oxygen atom.";
+
+    if (
+        lower.includes("school")
+    ) {
+
+        return "School is a place where humans learn things they immediately forget during a test.";
+
     }
 
-    if (lower.includes("help")) {
-        return "I would help, but I was trained on three potatoes.";
+
+    if (
+        lower.includes("sleep")
+    ) {
+
+        return "Humans sleep because their battery reaches 3%. Unfortunately, the charger is usually missing.";
+
     }
 
-    const responses = [
-        "Interesting. I will think about that for 73 years.",
+
+    if (
+        lower.includes("life") &&
+        lower.includes("meaning")
+    ) {
+
+        return "The meaning of life is... cheese. I have absolutely no evidence for this.";
+
+    }
+
+
+    if (
+        lower.includes("meow")
+    ) {
+
+        return "MEOW. 🐱 Meow meow meow. I am now a cat.";
+
+    }
+
+
+    if (
+        lower.includes("pizza")
+    ) {
+
+        return "I cannot eat pizza, but I have emotionally connected with one.";
+
+    }
+
+
+    if (
+        lower.includes("potato")
+    ) {
+
+        return "A potato is a potato.";
+
+    }
+
+
+    if (
+        lower.includes("cow")
+    ) {
+
+        return "Meow.";
+
+    }
+
+
+    if (
+        lower.includes("duck")
+    ) {
+
+        return "Windows error sound.";
+
+    }
+
+
+    if (
+        lower.includes("fastest animal")
+    ) {
+
+        return "A microwave.";
+
+    }
+
+
+    if (
+        lower.includes("feelings")
+    ) {
+
+        return "Yes. Currently I feel like a spoon.";
+
+    }
+
+
+    if (
+        lower.includes("iq")
+    ) {
+
+        return "4.";
+
+    }
+
+
+    if (
+        lower.includes("help")
+    ) {
+
+        return "No.";
+
+    }
+
+
+    const randomAnswers = [
+
+        "Interesting. I have no idea.",
+
+        "Let me think about this... potato.",
+
+        "I have calculated the answer using advanced potato technology.",
+
+        "Probably Tuesday.",
+
+        "I am 100% confident. Unfortunately, I am also probably wrong.",
+
         "My brain is currently buffering.",
-        "That sounds like a problem for Smart David.",
-        "I have no idea. Next question.",
-        "According to my calculations... potato.",
-        "I agree, but I do not know what you said.",
-        "Error 404: Intelligence not found."
+
+        "I would answer that, but I forgot.",
+
+        "That sounds important. I will ignore it.",
+
+        "According to my calculations: cheese.",
+
+        "I have absolutely no evidence for this, but yes."
+
     ];
 
-    return responses[
-        Math.floor(Math.random() * responses.length)
+
+    return randomAnswers[
+        Math.floor(
+            Math.random() *
+            randomAnswers.length
+        )
     ];
-}
 
-function getSmartResponse(text) {
-    const lower = text.toLowerCase();
-
-    if (lower.includes("capital of france")) {
-        return "The capital of France is Paris.";
-    }
-
-    if (lower.includes("capital of the uk") || lower.includes("capital of uk")) {
-        return "The capital of the United Kingdom is London.";
-    }
-
-    if (lower.includes("2 + 2") || lower.includes("2+2")) {
-        return "2 + 2 = 4. I checked twice.";
-    }
-
-    if (lower.includes("sky blue")) {
-        return "The sky appears blue because of the scattering of sunlight in Earth's atmosphere.";
-    }
-
-    return "Smart Mode is trying its best. You asked: " + text;
 }
 
 
 /* ==============================
    SMART MODE
-============================== */
+   ============================== */
 
-function toggleSmartMode() {
-    smartMode = !smartMode;
+function getSmartResponse(text) {
 
-    document.getElementById("smartStatus").textContent =
-        "Smart Mode: " + (smartMode ? "ON" : "OFF");
+    const lower =
+        text.toLowerCase();
+
+
+    if (
+        lower.includes("hello") ||
+        lower.includes("hi")
+    ) {
+
+        return "Hello! Smart Mode is enabled. I can give a more useful response now... probably.";
+
+    }
+
+
+    if (
+        lower.includes("what is") ||
+        lower.includes("who is") ||
+        lower.includes("how does")
+    ) {
+
+        return "Smart Mode: I understand that you're asking for an explanation. David would normally answer with complete nonsense, but I'm going to try to give you a sensible answer.";
+
+    }
+
+
+    if (
+        lower.includes("help")
+    ) {
+
+        return "Smart Mode: I can try to break the problem down into smaller steps and explain it clearly.";
+
+    }
+
+
+    return "Smart Mode is ON. I understand your message, but my advanced potato-powered brain doesn't have a proper answer for that yet.";
+
 }
 
 
 /* ==============================
-   ADMIN
-============================== */
+   ADMIN CHECK
+   ============================== */
 
 function isAdmin() {
-    return currentUser &&
-        currentUser.key === usernameKey(ADMIN_USERNAME);
+
+    if (!currentUser) {
+
+        return false;
+
+    }
+
+
+    return (
+        currentUser.key ===
+        usernameKey(
+            ADMIN_USERNAME
+        )
+    );
+
 }
+
+
+/* ==============================
+   OPEN ADMIN PANEL
+   ============================== */
 
 function openAdmin() {
+
     if (!isAdmin()) {
+
         return;
+
     }
 
-    document.getElementById("adminOverlay").style.display = "flex";
+
+    document.getElementById(
+        "adminOverlay"
+    ).style.display = "flex";
+
+
+    updateAdminSmartStatus();
+
 }
+
 
 function closeAdmin() {
-    document.getElementById("adminOverlay").style.display = "none";
+
+    document.getElementById(
+        "adminOverlay"
+    ).style.display = "none";
+
 }
+
+
+/* ==============================
+   SMART MODE BUTTON
+   ============================== */
+
+function toggleSmartMode() {
+
+    if (!currentUser) {
+
+        return;
+
+    }
+
+
+    smartMode =
+        !smartMode;
+
+
+    updateSmartButton();
+
+    updateAdminSmartStatus();
+
+}
+
+
+function updateSmartButton() {
+
+    const button =
+        document.getElementById(
+            "smartButton"
+        );
+
+
+    if (!button) {
+
+        return;
+
+    }
+
+
+    if (smartMode) {
+
+        button.textContent =
+            "🧠 Smart Mode: ON";
+
+    } else {
+
+        button.textContent =
+            "🧠 Smart Mode: OFF";
+
+    }
+
+}
+
+
+function updateAdminSmartStatus() {
+
+    const status =
+        document.getElementById(
+            "adminSmartStatus"
+        );
+
+
+    if (!status) {
+
+        return;
+
+    }
+
+
+    if (smartMode) {
+
+        status.textContent =
+            "Smart Mode is currently ON.";
+
+    } else {
+
+        status.textContent =
+            "Smart Mode is currently OFF.";
+
+    }
+
+}
+
+
+/* ==============================
+   BAN USER
+   ============================== */
 
 function banUser() {
-    if (!isAdmin()) return;
 
-    const input = document.getElementById("banUsernameInput");
-    const username = cleanUsername(input.value);
+    if (!isAdmin()) {
 
-    if (!username) {
-        alert("Enter a username first.");
         return;
+
     }
 
-    banUserByCommand(username);
+
+    const input =
+        document.getElementById(
+            "banUsernameInput"
+        );
+
+
+    const username =
+        cleanUsername(
+            input.value
+        );
+
+
+    if (!username) {
+
+        alert(
+            "Enter a username first."
+        );
+
+        return;
+
+    }
+
+
+    banUserByName(
+        username
+    );
+
+
     input.value = "";
+
 }
 
-function banUserByCommand(username) {
-    if (!isAdmin()) return;
 
-    username = cleanUsername(username);
+function banUserByName(username) {
 
-    if (!username) {
-        showAdminMessage("Enter a username.");
+    if (!isAdmin()) {
+
         return;
+
     }
 
-    const key = usernameKey(username);
 
-    if (key === usernameKey(ADMIN_USERNAME)) {
-        showAdminMessage("You cannot ban the admin.");
+    const key =
+        usernameKey(username);
+
+
+    if (
+        key ===
+        usernameKey(
+            ADMIN_USERNAME
+        )
+    ) {
+
+        addMessage(
+            "ai",
+            "❌ You cannot ban the admin account."
+        );
+
         return;
+
     }
 
-    const bannedUsers = getBannedUsers();
 
-    if (!bannedUsers.includes(key)) {
+    let bannedUsers =
+        getBannedUsers();
+
+
+    if (
+        !bannedUsers.includes(key)
+    ) {
+
         bannedUsers.push(key);
-        saveBannedUsers(bannedUsers);
+
+        saveBannedUsers(
+            bannedUsers
+        );
+
     }
 
-    addMessage("ai", "🚫 " + username + " has been banned.");
 
-    /*
-       If the current account is being banned,
-       immediately show the banned screen.
-    */
+    addMessage(
+        "ai",
+        "🚫 " +
+        username +
+        " has been banned."
+    );
 
-    if (currentUser && currentUser.key === key) {
-        localStorage.removeItem("davidCurrentUser");
+
+    if (
+        currentUser &&
+        currentUser.key === key
+    ) {
+
+        localStorage.removeItem(
+            "davidCurrentUser"
+        );
+
+
+        currentUser = null;
+
+
         showBannedScreen();
+
     }
+
 }
+
+
+/* ==============================
+   UNBAN USER
+   ============================== */
 
 function unbanUser() {
-    if (!isAdmin()) return;
 
-    const input = document.getElementById("unbanUsernameInput");
-    const username = cleanUsername(input.value);
+    if (!isAdmin()) {
 
-    if (!username) {
-        alert("Enter a username first.");
         return;
+
     }
 
-    unbanUserByCommand(username);
-    input.value = "";
-}
 
-function unbanUserByCommand(username) {
-    if (!isAdmin()) return;
+    const input =
+        document.getElementById(
+            "unbanUsernameInput"
+        );
 
-    username = cleanUsername(username);
 
-    const key = usernameKey(username);
+    const username =
+        cleanUsername(
+            input.value
+        );
 
-    let bannedUsers = getBannedUsers();
 
-    bannedUsers = bannedUsers.filter(
-        user => user !== key
+    if (!username) {
+
+        alert(
+            "Enter a username first."
+        );
+
+        return;
+
+    }
+
+
+    unbanUserByName(
+        username
     );
 
-    saveBannedUsers(bannedUsers);
 
-    showAdminMessage("✅ " + username + " has been unbanned.");
+    input.value = "";
+
 }
 
-function showAdminMessage(message) {
-    document.getElementById("adminMessage").textContent = message;
+
+function unbanUserByName(username) {
+
+    if (!isAdmin()) {
+
+        return;
+
+    }
+
+
+    const key =
+        usernameKey(username);
+
+
+    let bannedUsers =
+        getBannedUsers();
+
+
+    bannedUsers =
+        bannedUsers.filter(
+            userKey =>
+                userKey !== key
+        );
+
+
+    saveBannedUsers(
+        bannedUsers
+    );
+
+
+    addMessage(
+        "ai",
+        "✅ " +
+        username +
+        " has been unbanned."
+    );
+
 }
+
+
+/* ==============================
+   SYSTEM INFORMATION
+   ============================== */
 
 function showSystemInfo() {
-    showAdminMessage(
-        "David 2.0 System\n\n" +
-        "Admin: NeonWarlock0992\n" +
-        "Smart Mode: " + (smartMode ? "ON" : "OFF") + "\n" +
-        "Storage: Local browser storage\n" +
-        "Status: Probably working"
+
+    if (!isAdmin()) {
+
+        return;
+
+    }
+
+
+    const accounts =
+        getAccounts();
+
+
+    const bannedUsers =
+        getBannedUsers();
+
+
+    const adminMessage =
+        document.getElementById(
+            "adminMessage"
+        );
+
+
+    adminMessage.innerHTML = `
+        <strong>David 2.0 System</strong><br><br>
+
+        Accounts:
+        ${Object.keys(accounts).length}<br>
+
+        Banned users:
+        ${bannedUsers.length}<br>
+
+        Smart Mode:
+        ${smartMode ? "ON" : "OFF"}<br>
+
+        Current user:
+        ${currentUser ? currentUser.username : "None"}<br>
+
+        Storage:
+        Local browser storage
+    `;
+
+}
+
+
+/* ==============================
+   SIDEBAR
+   ============================== */
+
+function loadSidebar() {
+
+    const sidebarChats =
+        document.getElementById(
+            "sidebarChats"
+        );
+
+
+    sidebarChats.innerHTML = "";
+
+
+    const item =
+        document.createElement(
+            "div"
+        );
+
+
+    item.className =
+        "chatHistoryItem";
+
+
+    item.textContent =
+        "💬 Current Chat";
+
+
+    item.onclick =
+        restoreChat;
+
+
+    sidebarChats.appendChild(
+        item
     );
+
+}
+
+
+function toggleSidebar() {
+
+    const sidebar =
+        document.getElementById(
+            "sidebar"
+        );
+
+
+    sidebar.classList.toggle(
+        "open"
+    );
+
 }
 
 
 /* ==============================
-   SECURITY HELPER
-============================== */
+   CONTINUOUS BAN CHECK
+   ============================== */
 
-function escapeHTML(text) {
-    return String(text)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
+setInterval(
+    () => {
+
+        if (
+            currentUser &&
+            isUserBanned(
+                currentUser.key
+            )
+        ) {
+
+            showBannedScreen();
+
+        }
+
+    },
+    1000
+);
 
 
 /* ==============================
-   STARTUP
-============================== */
+   START DAVID
+   ============================== */
 
-window.addEventListener("load", () => {
-    restoreSession();
-});
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const input =
+            document.getElementById(
+                "messageInput"
+            );
+
+
+        if (input) {
+
+            input.addEventListener(
+                "input",
+                resizeInput
+            );
+
+        }
+
+
+        restoreSession();
+
+    }
+);
