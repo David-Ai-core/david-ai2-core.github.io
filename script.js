@@ -293,17 +293,29 @@ async function joinDavid() {
          * Create the David profile.
          */
 
-        const {
-            error: profileError
-        } =
-            await supabaseClient.rpc(
-                "create_david_profile",
-                {
-                    requested_username:
-                        username
-                }
-            );
+const {
+    data: profileData,
+    error: profileError
+} =
+    await supabaseClient.rpc(
+        "create_or_get_david_profile",
+        {
+            requested_username:
+                username
+        }
+    );
 
+if (profileError) {
+    throw profileError;
+}
+
+const profile = profileData?.[0];
+
+if (!profile) {
+    throw new Error(
+        "Could not load your David profile."
+    );
+}
 
         if (profileError) {
 
