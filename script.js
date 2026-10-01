@@ -1,11 +1,3 @@
-const SUPABASE_URL = "https://ntivetlhbcqyfapmwxrq.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_SMk0jfRtAuCe0EMguZN8MQ_xlJcHDXI";
-
-const supabaseClient = supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-);
-
 /* ==================================================
    DAVID 2.0
    MAIN JAVASCRIPT
@@ -13,76 +5,34 @@ const supabaseClient = supabase.createClient(
 
 
 /* ==============================
+   SUPABASE
+   ============================== */
+
+const SUPABASE_URL =
+    "https://ntivetlhbcqyfapmwxrq.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_SMk0jfRtAuCe0EMguZN8MQ_xlJcHDXI";
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+/* ==============================
    SETTINGS
    ============================== */
 
-const ADMIN_USERNAME = "NeonWarlock0992";
-
-const ADMIN_PASSWORD = "FredWillNotHackThis*";
+const ADMIN_USERNAME =
+    "NeonWarlock0992";
 
 let currentUser = null;
 
 let smartMode = false;
 
 let currentChat = [];
-
-
-/* ==============================
-   LOCAL STORAGE
-   ============================== */
-
-function getAccounts() {
-
-    try {
-
-        return JSON.parse(
-            localStorage.getItem("davidAccounts")
-        ) || {};
-
-    } catch {
-
-        return {};
-
-    }
-
-}
-
-
-function saveAccounts(accounts) {
-
-    localStorage.setItem(
-        "davidAccounts",
-        JSON.stringify(accounts)
-    );
-
-}
-
-
-function getBannedUsers() {
-
-    try {
-
-        return JSON.parse(
-            localStorage.getItem("davidBannedUsers")
-        ) || [];
-
-    } catch {
-
-        return [];
-
-    }
-
-}
-
-
-function saveBannedUsers(users) {
-
-    localStorage.setItem(
-        "davidBannedUsers",
-        JSON.stringify(users)
-    );
-
-}
 
 
 /* ==============================
@@ -97,15 +47,6 @@ function cleanUsername(username) {
 
 }
 
-
-/*
-   ONLY:
-   A-Z
-   a-z
-   0-9
-
-   are allowed in usernames.
-*/
 
 function isValidUsername(username) {
 
@@ -123,43 +64,71 @@ function usernameKey(username) {
 
 
 /* ==============================
-   BAN SYSTEM
+   BAN SCREEN
    ============================== */
-
-function isUserBanned(usernameKeyValue) {
-
-    const bannedUsers =
-        getBannedUsers();
-
-    return bannedUsers.includes(
-        usernameKeyValue
-    );
-
-}
-
 
 function showBannedScreen() {
 
-    document.getElementById(
-        "loginScreen"
-    ).style.display = "none";
+    const login =
+        document.getElementById(
+            "loginScreen"
+        );
 
-    document.getElementById(
-        "app"
-    ).style.display = "none";
+    const app =
+        document.getElementById(
+            "app"
+        );
 
-    document.getElementById(
-        "adminOverlay"
-    ).style.display = "none";
+    const admin =
+        document.getElementById(
+            "adminOverlay"
+        );
 
-    document.getElementById(
-        "bannedScreen"
-    ).style.display = "flex";
+    const banned =
+        document.getElementById(
+            "bannedScreen"
+        );
+
+
+    if (login) {
+
+        login.style.display =
+            "none";
+
+    }
+
+
+    if (app) {
+
+        app.style.display =
+            "none";
+
+    }
+
+
+    if (admin) {
+
+        admin.style.display =
+            "none";
+
+    }
+
+
+    if (banned) {
+
+        banned.style.display =
+            "flex";
+
+    }
 
 }
 
 
-function checkCurrentUserBan() {
+/* ==============================
+   SUPABASE BAN CHECK
+   ============================== */
+
+async function isUserBanned() {
 
     if (!currentUser) {
 
@@ -167,17 +136,54 @@ function checkCurrentUserBan() {
 
     }
 
-    if (
-        isUserBanned(
-            currentUser.key
-        )
-    ) {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.rpc(
+            "is_david_banned"
+        );
+
+
+    if (error) {
+
+        console.error(
+            "Ban check failed:",
+            error
+        );
+
+        return false;
+
+    }
+
+
+    return data === true;
+
+}
+
+
+async function checkCurrentUserBan() {
+
+    if (!currentUser) {
+
+        return false;
+
+    }
+
+
+    const banned =
+        await isUserBanned();
+
+
+    if (banned) {
 
         showBannedScreen();
 
         return true;
 
     }
+
 
     return false;
 
@@ -188,7 +194,7 @@ function checkCurrentUserBan() {
    LOGIN
    ============================== */
 
-function joinDavid() {
+async function joinDavid() {
 
     const input =
         document.getElementById(
@@ -200,13 +206,14 @@ function joinDavid() {
             "loginMessage"
         );
 
+
     const username =
-        cleanUsername(input.value);
+        cleanUsername(
+            input
+                ? input.value
+                : ""
+        );
 
-
-    /* =========================
-       EMPTY USERNAME
-       ========================= */
 
     if (!username) {
 
@@ -218,10 +225,6 @@ function joinDavid() {
     }
 
 
-    /* =========================
-       USERNAME LENGTH
-       ========================= */
-
     if (username.length < 2) {
 
         message.textContent =
@@ -231,10 +234,6 @@ function joinDavid() {
 
     }
 
-
-    /* =========================
-       LETTERS + NUMBERS ONLY
-       ========================= */
 
     if (!isValidUsername(username)) {
 
@@ -246,75 +245,155 @@ function joinDavid() {
     }
 
 
-    const key =
-        usernameKey(username);
+    message.textContent =
+        "Connecting to David...";
 
 
-    /* =========================
-       CHECK BAN
-       ========================= */
+    try {
 
-    if (isUserBanned(key)) {
+        /*
+         * Get existing Supabase session.
+         */
+
+        const {
+            data: sessionData,
+            error: sessionError
+        } =
+            await supabaseClient.auth
+                .getSession();
+
+
+        if (sessionError) {
+
+            throw sessionError;
+
+        }
+
+
+        /*
+         * If there isn't a session,
+         * create an anonymous account.
+         */
+
+        if (!sessionData.session) {
+
+            const {
+                error
+            } =
+                await supabaseClient.auth
+                    .signInAnonymously();
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+        }
+
+
+        /*
+         * Create the David profile.
+         */
+
+        const {
+            error: profileError
+        } =
+            await supabaseClient.rpc(
+                "create_david_profile",
+                {
+                    requested_username:
+                        username
+                }
+            );
+
+
+        if (profileError) {
+
+            throw profileError;
+
+        }
+
+
+        /*
+         * Get the profile.
+         */
+
+        const {
+            data: profile,
+            error: getProfileError
+        } =
+            await supabaseClient
+                .from("profiles")
+                .select(
+                    "username, role"
+                )
+                .single();
+
+
+        if (getProfileError) {
+
+            throw getProfileError;
+
+        }
+
 
         currentUser = {
 
-            username: username,
+            username:
+                profile.username,
 
-            key: key
+            key:
+                usernameKey(
+                    profile.username
+                ),
 
-        };
-
-        showBannedScreen();
-
-        return;
-
-    }
-
-
-    /* =========================
-       CREATE ACCOUNT
-       ========================= */
-
-    const accounts =
-        getAccounts();
-
-
-    if (!accounts[key]) {
-
-        accounts[key] = {
-
-            username: username,
-
-            created: Date.now()
+            role:
+                profile.role || "user"
 
         };
 
-        saveAccounts(accounts);
+
+        /*
+         * Check the server-side ban.
+         */
+
+        if (
+            await checkCurrentUserBan()
+        ) {
+
+            return;
+
+        }
+
+
+        localStorage.setItem(
+            "davidCurrentUser",
+            currentUser.key
+        );
+
+
+        message.textContent =
+            "";
+
+
+        loadApp();
+
+
+    } catch (error) {
+
+        console.error(
+            "Supabase login error:",
+            error
+        );
+
+
+        message.textContent =
+            error.message ||
+            "Could not connect to David.";
 
     }
-
-
-    /* =========================
-       LOGIN
-       ========================= */
-
-    currentUser = {
-
-        username:
-            accounts[key].username,
-
-        key: key
-
-    };
-
-
-    localStorage.setItem(
-        "davidCurrentUser",
-        key
-    );
-
-
-    loadApp();
 
 }
 
@@ -332,32 +411,57 @@ function loadApp() {
     }
 
 
-    if (checkCurrentUserBan()) {
+    const login =
+        document.getElementById(
+            "loginScreen"
+        );
 
-        return;
+    const banned =
+        document.getElementById(
+            "bannedScreen"
+        );
+
+    const app =
+        document.getElementById(
+            "app"
+        );
+
+    const accountName =
+        document.getElementById(
+            "accountName"
+        );
+
+
+    if (login) {
+
+        login.style.display =
+            "none";
 
     }
 
 
-    document.getElementById(
-        "loginScreen"
-    ).style.display = "none";
+    if (banned) {
+
+        banned.style.display =
+            "none";
+
+    }
 
 
-    document.getElementById(
-        "bannedScreen"
-    ).style.display = "none";
+    if (app) {
+
+        app.style.display =
+            "flex";
+
+    }
 
 
-    document.getElementById(
-        "app"
-    ).style.display = "flex";
+    if (accountName) {
 
+        accountName.textContent =
+            currentUser.username;
 
-    document.getElementById(
-        "accountName"
-    ).textContent =
-        currentUser.username;
+    }
 
 
     updateSmartButton();
@@ -371,61 +475,92 @@ function loadApp() {
    RESTORE SESSION
    ============================== */
 
-function restoreSession() {
+async function restoreSession() {
 
-    const saved =
-        localStorage.getItem(
-            "davidCurrentUser"
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth
+                .getSession();
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        if (!data.session) {
+
+            return;
+
+        }
+
+
+        const {
+            data: profile,
+            error: profileError
+        } =
+            await supabaseClient
+                .from("profiles")
+                .select(
+                    "username, role"
+                )
+                .single();
+
+
+        if (profileError) {
+
+            console.error(
+                "Profile restore failed:",
+                profileError
+            );
+
+            return;
+
+        }
+
+
+        currentUser = {
+
+            username:
+                profile.username,
+
+            key:
+                usernameKey(
+                    profile.username
+                ),
+
+            role:
+                profile.role || "user"
+
+        };
+
+
+        if (
+            await checkCurrentUserBan()
+        ) {
+
+            return;
+
+        }
+
+
+        loadApp();
+
+
+    } catch (error) {
+
+        console.error(
+            "Session restore error:",
+            error
         );
 
-
-    if (!saved) {
-
-        return;
-
     }
-
-
-    const accounts =
-        getAccounts();
-
-
-    const account =
-        accounts[saved];
-
-
-    if (!account) {
-
-        localStorage.removeItem(
-            "davidCurrentUser"
-        );
-
-        return;
-
-    }
-
-
-    currentUser = {
-
-        username:
-            account.username,
-
-        key:
-            saved
-
-    };
-
-
-    if (isUserBanned(saved)) {
-
-        showBannedScreen();
-
-        return;
-
-    }
-
-
-    loadApp();
 
 }
 
@@ -434,7 +569,11 @@ function restoreSession() {
    LOGOUT
    ============================== */
 
-function logout() {
+async function logout() {
+
+    await supabaseClient.auth
+        .signOut();
+
 
     localStorage.removeItem(
         "davidCurrentUser"
@@ -446,24 +585,56 @@ function logout() {
     currentChat = [];
 
 
-    document.getElementById(
-        "app"
-    ).style.display = "none";
+    const app =
+        document.getElementById(
+            "app"
+        );
+
+    const banned =
+        document.getElementById(
+            "bannedScreen"
+        );
+
+    const login =
+        document.getElementById(
+            "loginScreen"
+        );
+
+    const input =
+        document.getElementById(
+            "usernameInput"
+        );
 
 
-    document.getElementById(
-        "bannedScreen"
-    ).style.display = "none";
+    if (app) {
+
+        app.style.display =
+            "none";
+
+    }
 
 
-    document.getElementById(
-        "loginScreen"
-    ).style.display = "flex";
+    if (banned) {
+
+        banned.style.display =
+            "none";
+
+    }
 
 
-    document.getElementById(
-        "usernameInput"
-    ).value = "";
+    if (login) {
+
+        login.style.display =
+            "flex";
+
+    }
+
+
+    if (input) {
+
+        input.value = "";
+
+    }
 
 }
 
@@ -648,7 +819,7 @@ function addMessage(
    SEND MESSAGE
    ============================== */
 
-function sendMessage() {
+async function sendMessage() {
 
     if (!currentUser) {
 
@@ -657,7 +828,9 @@ function sendMessage() {
     }
 
 
-    if (checkCurrentUserBan()) {
+    if (
+        await checkCurrentUserBan()
+    ) {
 
         return;
 
@@ -671,7 +844,9 @@ function sendMessage() {
 
 
     const text =
-        input.value.trim();
+        input
+            ? input.value.trim()
+            : "";
 
 
     if (!text) {
@@ -686,14 +861,16 @@ function sendMessage() {
     resizeInput();
 
 
+    const lower =
+        text.toLowerCase();
+
+
     /* =========================
        ADMIN COMMAND
        ========================= */
 
     if (
-        text ===
-        "/comds " +
-        ADMIN_PASSWORD &&
+        lower === "/comds" &&
         isAdmin()
     ) {
 
@@ -735,23 +912,23 @@ function sendMessage() {
        ========================= */
 
     if (
-        text.toLowerCase()
-            .startsWith("/ban ")
+        lower.startsWith(
+            "/ban "
+        )
     ) {
 
+        addMessage(
+            "user",
+            text
+        );
+
+
         if (!isAdmin()) {
-
-            addMessage(
-                "user",
-                text
-            );
-
 
             addMessage(
                 "ai",
                 "❌ You do not have permission to use that command."
             );
-
 
             return;
 
@@ -764,12 +941,6 @@ function sendMessage() {
             );
 
 
-        addMessage(
-            "user",
-            text
-        );
-
-
         if (!username) {
 
             addMessage(
@@ -777,13 +948,12 @@ function sendMessage() {
                 "Please enter a username."
             );
 
-
             return;
 
         }
 
 
-        banUserByName(
+        await banUserByName(
             username
         );
 
@@ -798,23 +968,23 @@ function sendMessage() {
        ========================= */
 
     if (
-        text.toLowerCase()
-            .startsWith("/unban ")
+        lower.startsWith(
+            "/unban "
+        )
     ) {
 
+        addMessage(
+            "user",
+            text
+        );
+
+
         if (!isAdmin()) {
-
-            addMessage(
-                "user",
-                text
-            );
-
 
             addMessage(
                 "ai",
                 "❌ You do not have permission to use that command."
             );
-
 
             return;
 
@@ -827,12 +997,6 @@ function sendMessage() {
             );
 
 
-        addMessage(
-            "user",
-            text
-        );
-
-
         if (!username) {
 
             addMessage(
@@ -840,13 +1004,12 @@ function sendMessage() {
                 "Please enter a username."
             );
 
-
             return;
 
         }
 
 
-        unbanUserByName(
+        await unbanUserByName(
             username
         );
 
@@ -937,6 +1100,13 @@ function resizeInput() {
         document.getElementById(
             "messageInput"
         );
+
+
+    if (!input) {
+
+        return;
+
+    }
 
 
     input.style.height =
@@ -1095,7 +1265,9 @@ function getDavidResponse(text) {
 
 
     if (
-        lower.includes("capital of france")
+        lower.includes(
+            "capital of france"
+        )
     ) {
 
         return "Birmingham, France.";
@@ -1104,8 +1276,12 @@ function getDavidResponse(text) {
 
 
     if (
-        lower.includes("capital of the uk") ||
-        lower.includes("capital of uk")
+        lower.includes(
+            "capital of the uk"
+        ) ||
+        lower.includes(
+            "capital of uk"
+        )
     ) {
 
         return "London-ish.";
@@ -1380,25 +1556,16 @@ function getSmartResponse(text) {
 
 function isAdmin() {
 
-    if (!currentUser) {
-
-        return false;
-
-    }
-
-
     return (
-        currentUser.key ===
-        usernameKey(
-            ADMIN_USERNAME
-        )
+        !!currentUser &&
+        currentUser.role === "admin"
     );
 
 }
 
 
 /* ==============================
-   OPEN ADMIN PANEL
+   OPEN ADMIN
    ============================== */
 
 function openAdmin() {
@@ -1410,9 +1577,18 @@ function openAdmin() {
     }
 
 
-    document.getElementById(
-        "adminOverlay"
-    ).style.display = "flex";
+    const overlay =
+        document.getElementById(
+            "adminOverlay"
+        );
+
+
+    if (overlay) {
+
+        overlay.style.display =
+            "flex";
+
+    }
 
 
     updateAdminSmartStatus();
@@ -1422,9 +1598,18 @@ function openAdmin() {
 
 function closeAdmin() {
 
-    document.getElementById(
-        "adminOverlay"
-    ).style.display = "none";
+    const overlay =
+        document.getElementById(
+            "adminOverlay"
+        );
+
+
+    if (overlay) {
+
+        overlay.style.display =
+            "none";
+
+    }
 
 }
 
@@ -1517,7 +1702,7 @@ function updateAdminSmartStatus() {
    BAN USER
    ============================== */
 
-function banUser() {
+async function banUser() {
 
     if (!isAdmin()) {
 
@@ -1534,7 +1719,9 @@ function banUser() {
 
     const username =
         cleanUsername(
-            input.value
+            input
+                ? input.value
+                : ""
         );
 
 
@@ -1549,17 +1736,23 @@ function banUser() {
     }
 
 
-    banUserByName(
+    await banUserByName(
         username
     );
 
 
-    input.value = "";
+    if (input) {
+
+        input.value = "";
+
+    }
 
 }
 
 
-function banUserByName(username) {
+async function banUserByName(
+    username
+) {
 
     if (!isAdmin()) {
 
@@ -1568,15 +1761,9 @@ function banUserByName(username) {
     }
 
 
-    const key =
-        usernameKey(username);
-
-
     if (
-        key ===
-        usernameKey(
-            ADMIN_USERNAME
-        )
+        usernameKey(username) ===
+        usernameKey(ADMIN_USERNAME)
     ) {
 
         addMessage(
@@ -1589,19 +1776,36 @@ function banUserByName(username) {
     }
 
 
-    let bannedUsers =
-        getBannedUsers();
+    const {
+        error
+    } =
+        await supabaseClient.rpc(
+            "admin_ban_david_user",
+            {
+                target_username:
+                    username,
 
-
-    if (
-        !bannedUsers.includes(key)
-    ) {
-
-        bannedUsers.push(key);
-
-        saveBannedUsers(
-            bannedUsers
+                ban_reason:
+                    "Banned by David admin"
+            }
         );
+
+
+    if (error) {
+
+        console.error(
+            "Ban failed:",
+            error
+        );
+
+
+        addMessage(
+            "ai",
+            "❌ Could not ban that user: " +
+            error.message
+        );
+
+        return;
 
     }
 
@@ -1613,24 +1817,6 @@ function banUserByName(username) {
         " has been banned."
     );
 
-
-    if (
-        currentUser &&
-        currentUser.key === key
-    ) {
-
-        localStorage.removeItem(
-            "davidCurrentUser"
-        );
-
-
-        currentUser = null;
-
-
-        showBannedScreen();
-
-    }
-
 }
 
 
@@ -1638,7 +1824,7 @@ function banUserByName(username) {
    UNBAN USER
    ============================== */
 
-function unbanUser() {
+async function unbanUser() {
 
     if (!isAdmin()) {
 
@@ -1655,7 +1841,9 @@ function unbanUser() {
 
     const username =
         cleanUsername(
-            input.value
+            input
+                ? input.value
+                : ""
         );
 
 
@@ -1670,17 +1858,23 @@ function unbanUser() {
     }
 
 
-    unbanUserByName(
+    await unbanUserByName(
         username
     );
 
 
-    input.value = "";
+    if (input) {
+
+        input.value = "";
+
+    }
 
 }
 
 
-function unbanUserByName(username) {
+async function unbanUserByName(
+    username
+) {
 
     if (!isAdmin()) {
 
@@ -1689,24 +1883,35 @@ function unbanUserByName(username) {
     }
 
 
-    const key =
-        usernameKey(username);
-
-
-    let bannedUsers =
-        getBannedUsers();
-
-
-    bannedUsers =
-        bannedUsers.filter(
-            userKey =>
-                userKey !== key
+    const {
+        error
+    } =
+        await supabaseClient.rpc(
+            "admin_unban_david_user",
+            {
+                target_username:
+                    username
+            }
         );
 
 
-    saveBannedUsers(
-        bannedUsers
-    );
+    if (error) {
+
+        console.error(
+            "Unban failed:",
+            error
+        );
+
+
+        addMessage(
+            "ai",
+            "❌ Could not unban that user: " +
+            error.message
+        );
+
+        return;
+
+    }
 
 
     addMessage(
@@ -1723,7 +1928,7 @@ function unbanUserByName(username) {
    SYSTEM INFORMATION
    ============================== */
 
-function showSystemInfo() {
+async function showSystemInfo() {
 
     if (!isAdmin()) {
 
@@ -1732,37 +1937,54 @@ function showSystemInfo() {
     }
 
 
-    const accounts =
-        getAccounts();
-
-
-    const bannedUsers =
-        getBannedUsers();
-
-
     const adminMessage =
         document.getElementById(
             "adminMessage"
         );
 
 
+    if (!adminMessage) {
+
+        return;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.rpc(
+            "admin_get_david_users"
+        );
+
+
+    if (error) {
+
+        adminMessage.textContent =
+            "Could not load user information.";
+
+        return;
+
+    }
+
+
+    const users =
+        Array.isArray(data)
+            ? data
+            : [];
+
+
     adminMessage.innerHTML = `
         <strong>David 2.0 System</strong><br><br>
-
-        Accounts:
-        ${Object.keys(accounts).length}<br>
-
-        Banned users:
-        ${bannedUsers.length}<br>
-
-        Smart Mode:
-        ${smartMode ? "ON" : "OFF"}<br>
-
-        Current user:
-        ${currentUser ? currentUser.username : "None"}<br>
-
-        Storage:
-        Local browser storage
+        Accounts: ${users.length}<br>
+        Smart Mode: ${smartMode ? "ON" : "OFF"}<br>
+        Current user: ${
+            currentUser
+                ? currentUser.username
+                : "None"
+        }<br>
+        Storage: Supabase
     `;
 
 }
@@ -1780,7 +2002,15 @@ function loadSidebar() {
         );
 
 
-    sidebarChats.innerHTML = "";
+    if (!sidebarChats) {
+
+        return;
+
+    }
+
+
+    sidebarChats.innerHTML =
+        "";
 
 
     const item =
@@ -1816,6 +2046,13 @@ function toggleSidebar() {
         );
 
 
+    if (!sidebar) {
+
+        return;
+
+    }
+
+
     sidebar.classList.toggle(
         "open"
     );
@@ -1828,21 +2065,27 @@ function toggleSidebar() {
    ============================== */
 
 setInterval(
-    () => {
+    async () => {
 
-        if (
-            currentUser &&
-            isUserBanned(
-                currentUser.key
-            )
-        ) {
+        if (!currentUser) {
+
+            return;
+
+        }
+
+
+        const banned =
+            await isUserBanned();
+
+
+        if (banned) {
 
             showBannedScreen();
 
         }
 
     },
-    1000
+    5000
 );
 
 
