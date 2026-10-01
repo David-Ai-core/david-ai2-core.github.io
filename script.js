@@ -16,18 +16,6 @@ const supabaseClient = supabase.createClient(
    SUPABASE
    ============================== */
 
-const SUPABASE_URL =
-    "https://ntivetlhbcqyfapmwxrq.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_SMk0jfRtAuCe0EMguZN8MQ_xlJcHDXI";
-
-const supabaseClient =
-    supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-    );
-
 
 /* ==============================
    SETTINGS
