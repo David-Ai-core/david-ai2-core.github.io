@@ -12,52 +12,27 @@
 
 <body>
 
-  <div id="loginScreen" class="screen">
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="screen">
+        <div class="loginBox">
+            <h1>🤪 David 2.0</h1>
+            <h2>The World's Least Intelligent AI</h2>
 
-    <div class="loginBox">
+            <p>Enter a username to begin.</p>
 
-        <h1>🤪 David 2.0</h1>
+            <input
+                id="usernameInput"
+                type="text"
+                placeholder="Enter username"
+                maxlength="20"
+            >
 
-        <h2>The World's Least Intelligent AI</h2>
+         <button onclick="joinDavid()">Enter David</button>
 
-        <p>Enter a username to begin.</p>
-
-        <input
-            id="usernameInput"
-            type="text"
-            placeholder="Enter username"
-            maxlength="20"
-        >
-
-        <button onclick="joinDavid()">
-            Enter David
-        </button>
-
-        <hr>
-
-        <p><strong>👑 Admin Login</strong></p>
-
-        <input
-            id="adminEmailInput"
-            type="email"
-            placeholder="Admin email"
-        >
-
-        <input
-            id="adminPasswordInput"
-            type="password"
-            placeholder="Admin password"
-        >
-
-        <button onclick="adminLogin()">
-            Admin Login
-        </button>
-
-        <p id="loginMessage" class="error"></p>
-
+            <p id="loginMessage" class="error"></p>
+        </div>
     </div>
 
-</div>
 
     <!-- BANNED SCREEN -->
     <div id="bannedScreen" class="screen bannedScreen">
