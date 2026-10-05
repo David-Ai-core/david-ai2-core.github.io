@@ -29,7 +29,29 @@
 
          <button onclick="joinDavid()">Enter David</button>
 
-            <p id="loginMessage" class="error"></p>
+<div id="adminLoginBox" style="display:none; margin-top:20px;">
+
+    <p><strong>🔐 Admin Login</strong></p>
+
+    <input
+        id="adminEmailInput"
+        type="email"
+        placeholder="Admin email"
+    >
+
+    <input
+        id="adminPasswordInput"
+        type="password"
+        placeholder="Admin password"
+    >
+
+    <button onclick="adminLogin()">
+        Login as Admin
+    </button>
+
+</div>
+
+<p id="loginMessage" class="error"></p>
         </div>
     </div>
 
