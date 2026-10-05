@@ -2110,8 +2110,135 @@ document.addEventListener(
 
         }
 
-
-        restoreSession();
+                restoreSession();
 
     }
+
 );
+
+
+/* ==============================
+   ADMIN LOGIN
+   ============================== */
+
+async function adminLogin() {
+
+    const emailInput =
+        document.getElementById(
+            "adminEmailInput"
+        );
+
+    const passwordInput =
+        document.getElementById(
+            "adminPasswordInput"
+        );
+
+    const message =
+        document.getElementById(
+            "loginMessage"
+        );
+
+    const email =
+        emailInput.value.trim();
+
+    const password =
+        passwordInput.value;
+
+    if (!email || !password) {
+
+        message.textContent =
+            "Enter your admin email and password.";
+
+        return;
+    }
+
+    message.textContent =
+        "Signing into admin account...";
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth
+                .signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+        if (error) {
+            throw error;
+        }
+
+        const {
+            data: profileData,
+            error: profileError
+        } =
+            await supabaseClient
+                .from("profiles")
+                .select(
+                    "username, role"
+                )
+                .single();
+
+        if (profileError) {
+            throw profileError;
+        }
+
+        const profile =
+            profileData;
+
+        if (
+            !profile ||
+            profile.role !== "admin"
+        ) {
+            throw new Error(
+                "This account is not an admin."
+            );
+        }
+
+        currentUser = {
+            username:
+                profile.username,
+
+            key:
+                usernameKey(
+                    profile.username
+                ),
+
+            role:
+                profile.role
+        };
+
+        localStorage.setItem(
+            "davidCurrentUser",
+            currentUser.key
+        );
+
+        message.textContent = "";
+
+        const adminBox =
+            document.getElementById(
+                "adminLoginBox"
+            );
+
+        if (adminBox) {
+            adminBox.style.display =
+                "none";
+        }
+
+        loadApp();
+
+    } catch (error) {
+
+        console.error(
+            "Admin login error:",
+            error
+        );
+
+        message.textContent =
+            error.message ||
+            "Admin login failed.";
+    }
+}
