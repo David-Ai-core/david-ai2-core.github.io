@@ -318,12 +318,6 @@ if (!profile) {
 }
 
 
-        if (getProfileError) {
-
-            throw getProfileError;
-
-        }
-
 
         currentUser = {
 
