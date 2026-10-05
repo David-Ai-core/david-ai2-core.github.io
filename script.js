@@ -310,7 +310,6 @@ if (profileError) {
 }
 
 const profile = profileData?.[0];
-
 if (!profile) {
     throw new Error(
         "Could not load your David profile."
