@@ -317,28 +317,6 @@ if (!profile) {
     );
 }
 
-        if (profileError) {
-
-            throw profileError;
-
-        }
-
-
-        /*
-         * Get the profile.
-         */
-
-        const {
-            data: profile,
-            error: getProfileError
-        } =
-            await supabaseClient
-                .from("profiles")
-                .select(
-                    "username, role"
-                )
-                .single();
-
 
         if (getProfileError) {
 
