@@ -2099,41 +2099,6 @@ document.addEventListener(
 );
 
 
-/* ==============================
-   ADMIN LOGIN
-   ============================== */
-
-async function adminLogin() {
-
-    const emailInput =
-        document.getElementById(
-            "adminEmailInput"
-        );
-
-    const passwordInput =
-        document.getElementById(
-            "adminPasswordInput"
-        );
-
-    const message =
-        document.getElementById(
-            "loginMessage"
-        );
-
-    const email =
-        emailInput.value.trim();
-
-    const password =
-        passwordInput.value;
-
-    if (!email || !password) {
-
-        message.textContent =
-            "Enter your admin email and password.";
-
-        return;
-    }
-
     message.textContent =
         "Signing into admin account...";
 
