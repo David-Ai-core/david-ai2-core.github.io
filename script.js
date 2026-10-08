@@ -244,24 +244,6 @@ async function joinDavid() {
     message.textContent =
         "Connecting to David...";
 
-    if (
-    usernameKey(username) ===
-    usernameKey(ADMIN_USERNAME)
-) {
-    const adminBox =
-        document.getElementById(
-            "adminLoginBox"
-        );
-
-    if (adminBox) {
-        adminBox.style.display = "block";
-    }
-
-    message.textContent =
-        "Admin account detected. Enter your admin login.";
-
-    return;
-}
 
 
     try {
