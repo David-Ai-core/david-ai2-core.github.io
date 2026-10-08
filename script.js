@@ -234,7 +234,7 @@ async function joinDavid() {
     if (!isValidUsername(username)) {
 
         message.textContent =
-            "Username can only contain letters and numbers.";
+            "Username can only contain letters and numbers, stop trying to hack";
 
         return;
 
