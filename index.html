@@ -27,7 +27,7 @@
                 maxlength="20"
             >
 
-    <button onclick="alert('BUTTON WORKS'); joinDavid()">
+<button onclick="joinDavid().catch(e => alert('LOGIN ERROR: ' + e.message))">
     Enter David
 </button>
 
